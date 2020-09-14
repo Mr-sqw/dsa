@@ -33,30 +33,30 @@ public class Permutation {
      * @param selectedSet 寻找一个全排列时的已选择列表。根据已选择列表，可相应地求出可选择列表
      * @param returnList
      */
-    private void doPermutation(char[] arr, LinkedHashSet<Integer> selectedSet, List<String> returnList) {
-        if (selectedSet.size() == arr.length) {/*一个完整的排列选择完毕，添加到返回列表。 结束条件：可选择列表为空。到达最底层，决策树的一个分支遍历完毕*/
-            StringBuilder sb = new StringBuilder();
-            selectedSet.forEach(index -> sb.append(arr[index]));
-            returnList.add(sb.toString());
+	private void doPermutation(char[] arr, LinkedHashSet<Integer> selectedSet, List<String> returnList) {
+		if (selectedSet.size() == arr.length) {/* 一个完整的排列选择完毕，添加到返回列表。 结束条件：可选择列表为空。到达最底层，决策树的一个分支遍历完毕 */
+			StringBuilder sb = new StringBuilder();
+			selectedSet.forEach(index -> sb.append(arr[index]));
+			returnList.add(sb.toString());
 
-            return;
-        }
+			return;// 到达最底层，决策树的一个分支遍历完毕。返回到上一层/倒数第二层(回溯): doPermutation 或 整个决策树遍历完毕。
+		}
 
-        for (int i = 0; i < arr.length; i++) {
-            if (selectedSet.add(i)) {//1.从当前层“剩下”的可选择列表中 选择 一个元素/节点来组成排列。 递归调用之前做选择。
+		for (int i = 0; i < arr.length; i++) {
+			if (selectedSet.add(i)) {// 1.从当前层“剩下”的可选择列表中 选择 一个元素/节点来组成排列。 递归调用之前做选择。
 
-                //2.继续从 以当前层以 当前选择的元素/节点 为根的下一层的“剩下”的可选择列表中选择一个元素来组成排列。 递归调用
-                doPermutation(arr, selectedSet, returnList);
+				// 2.继续从 以当前层以 当前选择的元素/节点 为根的下一层的“剩下”的可选择列表中选择一个元素来组成排列。 递归调用
+				doPermutation(arr, selectedSet, returnList);
 
-                //3.1.当前层以当前选择的元素为根的所有分支遍历完毕，继续以当前层其他可选择节点为根寻找分支。
-                // 3.2.同时取消选择 当前层当前选择的元素。以便当前层遍历完毕，返回到上层时，上层可以回溯使用到这个元素。 递归调用之后撤销选择。
-                // 取消的一定是当前层已经选择过的 及 当前层下面层已经选择过的，不能取消还没有选择的 及 当前层上面层已经选择过的。
-                selectedSet.remove(i);
-            } else {//该元素已被选择，继续遍历，从“剩下”的可选择列表中选择一个元素来组成排列
+				// 3.1.当前层以当前选择的元素为根的所有分支遍历完毕，继续以当前层其他可选择节点为根寻找分支。
+				// 3.2.同时取消选择 当前层当前选择的元素。以便当前层遍历完毕，返回到上层(回溯)时，上层可以使用到这个元素。 递归调用之后撤销选择。
+				// 取消的一定是当前层已经选择过的 及 当前层下面层已经选择过的，不能取消还没有选择的 及 当前层上面层已经选择过的。
+				selectedSet.remove(i);
+			} else {// 该元素已被选择，继续遍历，从“剩下”的可选择列表中选择一个元素来组成排列
 
-            }
-        }
-    }
+			}
+		} // 当前层的可选择列表中的所有元素/节点 遍历完毕，返回到上一层(回溯): doPermutation 或 整个决策树遍历完毕。
+	}
 
     public void doPermutationByDFS(char[] arr) {
         Set<String> returnSet = new HashSet<>();

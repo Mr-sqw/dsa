@@ -19,22 +19,24 @@
 
 
     <build>
-        <sourceDirectory>/src/main/java</sourceDirectory>
+    	<!-- 不能以/开头 -->
+    	<!-- <sourceDirectory>/src/main/java</sourceDirectory> -->
+        <sourceDirectory>src/main/java</sourceDirectory>
         <resources>
             <resource>
-                <directory>/src/main/resources</directory>
+                <directory>src/main/resources</directory>
             </resource>
         </resources>
         <scriptSourceDirectory>src/main/scripts</scriptSourceDirectory>
-        <outputDirectory>/target/classes</outputDirectory>
+        <outputDirectory>target/classes</outputDirectory>
 
-        <testSourceDirectory>/src/test/java</testSourceDirectory>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
         <testResources>
             <testResource>
-                <directory>/src/test/resources</directory>
+                <directory>src/test/resources</directory>
             </testResource>
         </testResources>
-        <testOutputDirectory>/target/test-classes</testOutputDirectory>
+        <testOutputDirectory>target/test-classes</testOutputDirectory>
     </build>
 
 </project>
