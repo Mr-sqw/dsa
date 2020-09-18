@@ -3,7 +3,7 @@ package me.javawold.dsa.greedy;
 import java.util.Arrays;
 
 /**
- *
+ * 区间问题
  */
 public class Interval {
 

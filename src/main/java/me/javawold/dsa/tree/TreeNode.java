@@ -1,14 +1,14 @@
 package me.javawold.dsa.tree;
 
-import java.util.List;
-
 /**
- * 树节点
+ * 二叉树节点。TreeNode
  */
 public class TreeNode {
 
-    int val;
+    public int val;
 
-    List<TreeNode> children;
+    public TreeNode left;
+
+    public TreeNode right;
 
 }

@@ -10,7 +10,7 @@ public class Traverse {
      *
      * @param root
      */
-    public void traverse(TreeNode root) {
+    public void traverse(NTreeNode root) {
         if (root == null) {
             return;
         }
@@ -18,7 +18,7 @@ public class Traverse {
         System.out.println(root.val);
 
         if (root.children != null) {
-            for (TreeNode child : root.children) {
+            for (NTreeNode child : root.children) {
                 traverse(child);
             }
         }
