@@ -161,7 +161,7 @@ public class Permutation {
 			if (indexSet.add(i)// 选择/剪枝：过滤掉上层已经选择的；本层已经选择的直接通过for循环就已经过滤了，但是没有过滤掉重复数字。
 			) {
 
-				if (currLevelNumSet.add(nums[i])) { // 选择/剪枝：过滤掉当前层已经选择的 重复数字，不用再继续深入下层，因为当前层前面的兄弟节点已经做过选择了。
+				if (currLevelNumSet.add(nums[i])) { // 选择/剪枝：过滤掉当前层已经选择的 重复数字
 					doPermuteUnique(nums, indexSet, lists);
 				}
 
