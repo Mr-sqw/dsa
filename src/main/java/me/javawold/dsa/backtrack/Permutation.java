@@ -30,7 +30,7 @@ public class Permutation {
      * 隐式利用方法栈的DFS
      *
      * @param arr
-     * @param selectedSet 寻找一个全排列时的已选择列表。根据已选择列表，可相应地求出可选择列表
+     * @param selectedSet 寻找一个全排列时的[上层]已选择列表。根据已选择列表，可相应地求出可选择列表
      * @param returnList
      */
 	private void doPermutation(char[] arr, LinkedHashSet<Integer> selectedSet, List<String> returnList) {
@@ -92,9 +92,91 @@ public class Permutation {
         }
     }
 
+	/**
+	 * 给定一个 没有重复 数字的序列，返回其所有可能的全排列。
+	 *
+	 * @param nums
+	 * @return
+	 * @author suqianwen 2020年9月19日
+	 */
+	public List<List<Integer>> permute(int[] nums) {
+		if (nums == null || nums.length == 0) {
+			return Collections.emptyList();
+		}
+
+		List<List<Integer>> lists = new ArrayList<>();
+		Set<Integer> set = new LinkedHashSet<>();
+		doPermute(nums, set, lists);
+		return lists;
+	}
+
+	private void doPermute(int[] nums, Set<Integer> set, List<List<Integer>> lists) {
+		if (set.size() == nums.length) {
+			List<Integer> list = new ArrayList<>(set);
+			lists.add(list);
+
+			return;
+		}
+
+		for (int num : nums) {
+			if (set.add(num)) {// 选择
+
+				doPermute(nums, set, lists);
+
+				set.remove(num);
+			}
+		}
+	}
+
+	/**
+	 * 给定一个可包含重复数字的序列，返回所有不重复的全排列。
+	 *
+	 * @param nums
+	 * @return
+	 * @author suqianwen 2020年9月19日
+	 */
+	public List<List<Integer>> permuteUnique(int[] nums) {
+		if (nums == null || nums.length == 0) {
+			return Collections.emptyList();
+		}
+
+		List<List<Integer>> lists = new ArrayList<>();
+		Set<Integer> indexSet = new LinkedHashSet<>();
+		doPermuteUnique(nums, indexSet, lists);
+		return lists;
+	}
+
+	private void doPermuteUnique(int[] nums, Set<Integer> indexSet, List<List<Integer>> lists) {
+		if (indexSet.size() == nums.length) {
+			List<Integer> list = new ArrayList<>(nums.length);
+			indexSet.forEach(index -> list.add(nums[index]));
+			lists.add(list);
+
+			return;
+		}
+
+		// 当前层已经选择的数字，重复数字不能多次选择
+		Set<Integer> currLevelNumSet = new HashSet<>(nums.length - indexSet.size());
+		for (int i = 0; i < nums.length; i++) {
+			if (indexSet.add(i)// 选择/剪枝：过滤掉上层已经选择的；本层已经选择的直接通过for循环就已经过滤了，但是没有过滤掉重复数字。
+			) {
+
+				if (currLevelNumSet.add(nums[i])) { // 选择/剪枝：过滤掉当前层已经选择的 重复数字，不用再继续深入下层，因为当前层前面的兄弟节点已经做过选择了。
+					doPermuteUnique(nums, indexSet, lists);
+				}
+
+				indexSet.remove(i);
+			}
+		}
+	}
+
     public static void main(String[] args) {
-        String[] strings = new Permutation().permutation("123");
-        Arrays.stream(strings).forEach(str -> System.out.println(str));
+		int[] nums = { 1, 1, 2 };
+		List<List<Integer>> lists = new Permutation().permuteUnique(nums);
+		lists.forEach(System.out::println);
+
+		String[] strings = new Permutation().permutation("123");
+		Arrays.stream(strings).forEach(System.out::println);
     }
 
 }
