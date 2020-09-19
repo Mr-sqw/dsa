@@ -22,10 +22,11 @@ public class LevelTraverse {
             int size = queue.size();
             List<Integer> list = new ArrayList<>(size);
             lists.add(list);
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < size; i++) {//当前层的所有节点
                 TreeNode node = queue.removeFirst();
                 list.add(node.val);
 
+                //向队列中加入当前层节点的子节点，构成下一层节点。
                 if (node.left != null) queue.addLast(node.left);
                 if (node.right != null) queue.addLast(node.right);
             }
@@ -85,7 +86,7 @@ public class LevelTraverse {
         while (!queue.isEmpty()) {
             int size = queue.size();
             List<Integer> list = new ArrayList<>(size);
-            for (int i = 0; i < size; i++) {
+            for (int i = 0; i < size; i++) {//当前层的所有节点
                 TreeNode node = queue.removeFirst();
                 if (node != nullNode) {
                     list.add(node.val);
