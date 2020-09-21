@@ -1,7 +1,36 @@
 package me.javawold.dsa.recursion;
 
+import me.javawold.dsa.tree.TreeNode;
+import me.javawold.dsa.tree.TreeUtils;
+
 public class RangeSumBST {
 
+	/**
+	 * 给定二叉搜索树的根结点 root，返回 L 和 R（含）之间的所有结点的值的和。
+
+二叉搜索树保证具有唯一的值。
+
+ 
+
+示例 1：
+
+输入：root = [10,5,15,3,7,null,18], L = 7, R = 15
+输出：32
+示例 2：
+
+输入：root = [10,5,15,3,7,13,18,1,null,6], L = 6, R = 10
+输出：23
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/range-sum-of-bst
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+	 *
+	 * @param root
+	 * @param L
+	 * @param R
+	 * @return
+	 * @author suqianwen 2020年9月21日
+	 */
     public int rangeSumBST(TreeNode root, int L, int R) {
         rangeSumBSTByMidOrder(root, L, R, new boolean[2]);
         return rangeSumBSTByPreOrder(root, L, R);
@@ -62,34 +91,11 @@ public class RangeSumBST {
         return rangeSum;
     }
 
-    public static void main(String[] args) {
-        Integer[] arr = { 10, 5, 15, 3, 7, null, 18 };
-
-    }
-
-    public TreeNode buildBST(Integer[] arr) {
-        if (arr == null || arr.length == 0) {
-            return null;
-        }
-
-        TreeNode[] nodes = new TreeNode[arr.length];
-        nodes[0] = new TreeNode(arr[0]);
-        for (int i = 1; i < arr.length; i++) {
-
-        }
-        return nodes[0];
-    }
-
-}
-
-class TreeNode {
-
-    int val;
-    TreeNode left;
-    TreeNode right;
-
-    TreeNode(int val) {
-        this.val = val;
-    }
+	public static void main(String[] args) {
+		Integer[] arr = { 10, 5, 15, 3, 7, null, 18 };
+		TreeNode root = TreeUtils.buildFST(arr);
+		int sum = new RangeSumBST().rangeSumBST(root, 7, 15);
+		System.out.println(sum);
+	}
 
 }
