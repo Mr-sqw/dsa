@@ -24,6 +24,7 @@ F(N) = F(N - 1) + F(N - 2), 其中 N > 1.
 链接：https://leetcode-cn.com/problems/fei-bo-na-qi-shu-lie-lcof
 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 	 *
+	 * ! n=5 和 n=10的解法(问题性质/解法思路)是一样的，不一样的只是问题的规模 !
 	 * @param n
 	 * @return
 	 * @author suqianwen 2020年9月21日
