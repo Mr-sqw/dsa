@@ -1,4 +1,6 @@
-package me.javawold.dsa.tree;
+package me.javawold.dsa.recursion;
+
+import me.javawold.dsa.tree.TreeNode;
 
 public class MaxDepth {
 
