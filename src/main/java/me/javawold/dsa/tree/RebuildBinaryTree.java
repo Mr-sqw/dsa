@@ -39,38 +39,38 @@ public class RebuildBinaryTree {
 	 * 
 	 *
 	 * @param preorder     整棵树的前序遍历序列
-	 * @param preorderHead 左/右子树的头节点在其前序遍历序列中的下标
+	 * @param preorderRoot 左/右子树的根节点在其前序遍历序列中的下标
 	 * @param inorder      整棵树的中序遍历序列
 	 * @param inorderStart 左/右子树的中序遍历序列的开始下标
 	 * @param inorderEnd   左/右子树的中序遍历序列的结束下标
 	 * @return
 	 * @author suqianwen 2020年9月21日
 	 */
-	private TreeNode doBuildTree(int[] preorder, int preorderHead, int[] inorder, int inorderStart, int inorderEnd) {
+	private TreeNode doBuildTree(int[] preorder, int preorderRoot, int[] inorder, int inorderStart, int inorderEnd) {
 		if (/*
 			 * preorderHead == preorder.length// ||
 			 */ inorderStart > inorderEnd) {// 子树为空
 			return null;
 		}
 
-		int rootVal = preorder[preorderHead];
+		int rootVal = preorder[preorderRoot];
 		TreeNode root = new TreeNode(rootVal);
 
-		/** 找到头节点在中序遍历序列中的位置，将中序遍历序列分为头节点的左右子树的中序遍历序列 */
-		int inorderHead = inorderStart;
-		for (; inorderHead <= inorderEnd; inorderHead++) {
-			if (inorder[inorderHead] == rootVal) {
+		/** 找到根节点在中序遍历序列中的位置，将中序遍历序列分为根节点的左右子树的中序遍历序列 */
+		int inorderRoot = inorderStart;
+		for (; inorderRoot <= inorderEnd; inorderRoot++) {
+			if (inorder[inorderRoot] == rootVal) {
 				break;
 			}
 		}
 
 		// 递归求解 左子树
-		TreeNode left = doBuildTree(preorder, preorderHead + 1, inorder, inorderStart, inorderHead - 1);
+		TreeNode left = doBuildTree(preorder, preorderRoot + 1, inorder, inorderStart, inorderRoot - 1);
 		root.left = left;
 
 		// 递归求解 右子树
-		// 右子树的头节点在其前序遍历序列中的下标等于原头节点下标 + 左子树的节点数
-		TreeNode right = doBuildTree(preorder, preorderHead + (inorderHead - inorderStart), inorder, inorderHead + 1,
+		// 右子树的根节点在其前序遍历序列中的下标等于原根节点下标 + 左子树的节点数 + 1
+		TreeNode right = doBuildTree(preorder, preorderRoot + (inorderRoot - inorderStart) + 1, inorder, inorderRoot + 1,
 				inorderEnd);
 		root.right = right;
 
