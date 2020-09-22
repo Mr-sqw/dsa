@@ -1,5 +1,10 @@
 package me.javawold.dsa.dp;
 
+import me.javawold.dsa.linkedlist.ListNode;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 回文字符串问题<br>
  * <br>
@@ -76,6 +81,44 @@ https://leetcode-cn.com/problems/longest-palindromic-substring/
 		
 		
 		return s.substring(longestPalindromeStartIndex, longestPalindromeEndIndex + 1);
-	}	
+	}
+
+	/**
+	 * 请判断一个链表是否为回文链表。
+	 *
+	 * 示例 1:
+	 *
+	 * 输入: 1->2
+	 * 输出: false
+	 * 示例 2:
+	 *
+	 * 输入: 1->2->2->1
+	 * 输出: true
+	 * 进阶：
+	 * 你能否用 O(n) 时间复杂度和 O(1) 空间复杂度解决此题？
+	 *
+	 * 来源：力扣（LeetCode）
+	 * 链接：https://leetcode-cn.com/problems/palindrome-linked-list
+	 * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+	 * @param head
+	 * @return
+	 */
+	public boolean isPalindrome(ListNode head) {
+		if (head == null) return true;
+
+		List<ListNode> list = new ArrayList<>();
+		do {
+			list.add(head);
+			head = head.next;
+		} while (head != null);
+
+		int i = 0, j = list.size() - 1;
+		for (; i < j; i++, j--) {
+			if (list.get(i).val != list.get(j).val) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 }
