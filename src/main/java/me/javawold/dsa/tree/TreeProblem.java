@@ -139,4 +139,44 @@ p、q 为不同节点且均存在于给定的二叉树中。
 		return left != null ? left : right;// 向上层调用返回在当前子树的左子树或右子树中找到了p或q
 	}
 
+	/**
+	 * 给定一个二叉搜索树（Binary Search Tree），把它转换成为累加树（Greater Tree)，使得每个节点的值是原来的节点值加上所有大于它的节点值之和。
+	 *
+	 *  
+	 *
+	 * 例如：
+	 *
+	 * 输入: 原始二叉搜索树:
+	 *               5
+	 *             /   \
+	 *            2     13
+	 *
+	 * 输出: 转换为累加树:
+	 *              18
+	 *             /   \
+	 *           20     13
+	 *
+	 * 来源：力扣（LeetCode）
+	 * 链接：https://leetcode-cn.com/problems/convert-bst-to-greater-tree
+	 * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+	 * @param root
+	 * @return
+	 */
+	public TreeNode convertBST(TreeNode root) {
+		if (root == null) return null;
+
+		TreeNode left = convertBST(root.left);
+		TreeNode right = convertBST(root.right);
+
+		int value = root.val;
+		//if (left != null) value += left.val;
+		if (right != null) value += right.val;
+		//
+		TreeNode newRoot = new TreeNode(value);
+		newRoot.left = left;
+		newRoot.right = right;
+		//
+		return newRoot;
+	}
+
 }
