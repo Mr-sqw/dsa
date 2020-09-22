@@ -35,6 +35,7 @@ public class TreeProblem {
 链接：https://leetcode-cn.com/problems/invert-binary-tree
 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 	 *
+	 *递归：自顶向下
 	 * @param root
 	 * @return
 	 * @author suqianwen 2020年9月22日
