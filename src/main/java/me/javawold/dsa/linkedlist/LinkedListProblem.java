@@ -211,7 +211,7 @@ public class LinkedListProblem {
 
 		return slow == head/* 是否删除头节点 */ ? slow.next : head;
 	}
-	
+
 	/**
 	 * 反转一个单链表。
 
