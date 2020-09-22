@@ -1,5 +1,8 @@
 package me.javawold.dsa.linkedlist;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LinkedListProblem {
 
     /**
@@ -128,5 +131,85 @@ public class LinkedListProblem {
         }
         return head;
     }
+
+    /**
+     * 给定一个链表，删除链表的倒数第 n 个节点，并且返回链表的头结点。
+
+示例：
+
+给定一个链表: 1->2->3->4->5, 和 n = 2.
+
+当删除了倒数第二个节点后，链表变为 1->2->3->5.
+说明：
+
+给定的 n 保证是有效的。
+
+进阶：
+
+你能尝试使用一趟扫描实现吗？
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     *
+     * @param head
+     * @param n
+     * @return
+     * @author suqianwen 2020年9月22日
+     */
+	public ListNode removeNthFromEnd(ListNode head, int n) {
+		if (head == null || n <= 0) {
+			return head;
+		}
+
+		List<ListNode> list = new ArrayList<>();
+		do {
+			list.add(head);
+			head = head.next;
+		} while (head != null);
+
+		if (list.size() < n) {
+			return list.get(0);
+		} else if (list.size() == n) {
+			list.get(0).next = null;
+			return list.size() > 1 ? list.get(1) : null;
+		} else {// list.size() > n ->
+			// 0 =< list.size()-n-1 < list.size();
+			// 2 =< list.size()-n+1 <= list.size()
+			list.get(list.size() - n - 1).next = (n > 1) ? list.get(list.size() - n + 1) : null;
+			return list.get(0);
+		}
+	}
+
+	public ListNode removeNthFromEndByFastSlowPointer(ListNode head, int n) {
+		if (head == null || n <= 0) {
+			return head;
+		}
+
+		ListNode fast = head;
+		//
+		ListNode slow = head;// 慢指针，倒数第n个节点。
+		ListNode slowPrev = null;
+
+		/* 快指针先向前移动n步 */
+		int step = 0;
+		while (step != n && fast != null) {
+			step++;
+			fast = fast.next;
+		}
+		/* 然后快慢指针一起向前移动，直到到达链表尾部 */
+		while (fast != null) {//
+			fast = fast.next;
+
+			slowPrev = slow;
+			slow = slow.next;
+		}
+		
+		if (slowPrev != null) {
+			slowPrev.next = slow.next;
+		}
+
+		return slow == head/* 是否删除头节点 */ ? slow.next : head;
+	}
 
 }
