@@ -1,5 +1,7 @@
 package me.javawold.dsa.tree;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * <br>
  * <br>
@@ -163,20 +165,34 @@ p、q 为不同节点且均存在于给定的二叉树中。
 	 * @return
 	 */
 	public TreeNode convertBST(TreeNode root) {
-		if (root == null) return null;
+		if (root == null)
+			return null;
 
-		TreeNode left = convertBST(root.left);
-		TreeNode right = convertBST(root.right);
+		doConvertBST(root, new AtomicInteger(0));
+		return root;
+	}
 
-		int value = root.val;
-		//if (left != null) value += left.val;
-		if (right != null) value += right.val;
-		//
-		TreeNode newRoot = new TreeNode(value);
-		newRoot.left = left;
-		newRoot.right = right;
-		//
-		return newRoot;
+	/**
+	 * 反序中序遍历。先右节点，再根节点，最后左节点，不断计算累加和。
+	 *
+	 * @param root
+	 * @param sum
+	 * @author suqianwen 2020年9月23日
+	 */
+	private void doConvertBST(TreeNode root, AtomicInteger sum) {
+		if (root == null)
+			return;
+
+		// 1.先右节点
+		doConvertBST(root.right, sum);
+
+		// 2.再根节点
+		/* 每个节点的值 是 原来的节点值 + 所有大于它的节点值之和(转换后的右子树的根节点值)， */
+		int val = sum.addAndGet(root.val);
+		root.val = val;
+
+		// 3.最后左节点
+		doConvertBST(root.left, sum);
 	}
 
 }
