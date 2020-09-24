@@ -39,17 +39,61 @@ public class GraphProblem {
      * @param grid
      * @return
      */
-    public int numIslands(char[][] grid) {
-        if (grid == null || grid.length == 0) return 0;
+	public int numIslands(char[][] grid) {
+		if (grid == null || grid.length == 0)
+			return 0;
 
-        int rowLength = grid.length;
-        int columnLength = grid[0].length;
-        boolean[][] visited = new boolean[rowLength][];
-        for (int i = 0; i < rowLength; i++) {
-            visited[i] = new boolean[columnLength];
-        }
+		int rowLength = grid.length;
+		int columnLength = grid[0].length;
+		boolean[][] visited = new boolean[rowLength][];
+		for (int i = 0; i < rowLength; i++) {
+			visited[i] = new boolean[columnLength];
+		}
 
-        return 0;
-    }
+		int num = 0;
+		while (true) {
+			/* 1.找出未访问且是陆地的坐标 */
+			int i = 0;// 顶点下标
+			int j = 0;
+			label: for (; i < rowLength; i++) {
+				for (; j < columnLength; j++) {
+					if (!visited[i][j]) {
+						if (grid[i][j] == '1') {
+							break label;
+						}
+
+						visited[i][j] = true;
+					}
+				}
+			}
+
+			/* 2.以1中找出的坐标为基准，进行dfs，找到一份连通图 */
+			dfs(i, rowLength, columnLength, grid, visited);
+
+			num++;
+
+			/* 访问完整个坐标系，结束 */
+			if (i == rowLength && j == columnLength) {
+				return num;
+			}
+		}
+	}
+
+	public void dfs(int rowIndex, int rowLength, int columnLength, char[][] grid, boolean[][] visited) {
+		if (rowIndex < 0 || rowIndex >= rowLength) {
+			return;
+		}
+
+		for (int j = 0; j < columnLength; j++) {
+			if (!visited[rowIndex][j]) {
+
+				visited[rowIndex][j] = true;
+
+				if (grid[rowIndex][j] == '1') {
+					dfs(j, rowLength, columnLength, grid, visited);
+				}
+			}
+		}
+	}
 
 }
