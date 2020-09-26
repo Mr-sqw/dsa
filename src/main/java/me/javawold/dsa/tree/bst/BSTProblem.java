@@ -2,6 +2,8 @@ package me.javawold.dsa.tree.bst;
 
 import me.javawold.dsa.tree.TreeNode;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class BSTProblem {
@@ -74,6 +76,45 @@ public class BSTProblem {
         if (root.left != null && root.val <= root.left.val) return false;
         if (root.right != null && root.val >= root.right.val) return false;
         return isValidBSTV2(root.left) && isValidBSTV2(root.right);
+    }
+
+    /**
+     * 给定一棵二叉搜索树，请找出其中第k大的节点。
+     *
+     * 倒序中序遍历
+     * @param root
+     * @param k
+     * @return
+     */
+    public int kthLargest(TreeNode root, int k) {
+        AtomicInteger atomicInteger = new AtomicInteger(k);
+        doGetKthLargest(root, atomicInteger, new AtomicBoolean(false));
+        return atomicInteger.get();
+    }
+
+    /**
+     * 倒序中序遍历
+     *
+     * @param root
+     * @param k
+     * @param found
+     */
+    private void doGetKthLargest(TreeNode root, AtomicInteger k, AtomicBoolean found) {
+        if (root == null) return;
+
+        //1.先右子树
+        doGetKthLargest(root.right, k, found);
+
+        //2.再根节点
+        if (found.get()) return;
+        if (k.decrementAndGet() == 0) {
+            k.set(root.val);
+            found.set(true);
+            return;
+        }
+
+        //3.最后左子树
+        doGetKthLargest(root.left, k, found);
     }
 
 }
