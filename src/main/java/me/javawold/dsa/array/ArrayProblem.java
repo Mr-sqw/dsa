@@ -80,9 +80,6 @@ public class ArrayProblem {
 	 * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 	 *
 	 * 从小到大归并
-	 * @param arr1
-	 * @param arr2
-	 * @return
 	 */
 	public void merge(int[] nums1, int m, int[] nums2, int n) {
 		if (n==0) return;
