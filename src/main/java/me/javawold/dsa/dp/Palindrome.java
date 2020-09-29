@@ -35,28 +35,44 @@ https://leetcode-cn.com/problems/longest-palindromic-substring/
 	 * @author suqianwen 2020年9月20日
 	 */
 	public String longestPalindrome(String s) {
-		if (s == null || s.length() == 0) {
+		int len;
+		if (s == null || (len = s.length()) == 0) {
 			return s;
 		}
 
-		// 状态定义。dpTable[i][j]：下标为[i, j]的子串是否为回文串。
-		boolean[][] dpTable = new boolean[s.length()][s.length()];
-		// 初始化状态。每个下标处的单个字符子串一定是回文串。
-		for (int i = 0; i < dpTable.length; i++) {
-			dpTable[i][i] = true;
+		// 状态定义。dp[i][j]：下标为[i, j]的子串是否为回文串。
+		boolean[][] dp = new boolean[len][len];
+		// 初始化状态。每个下标处的单个字符 构成的子串一定是回文串。
+		for (int i = 0; i < len; i++) {
+			dp[i][i] = true;
 		}
-		// 状态转移方程。
-		char[] charArr = s.toCharArray();
-		int longestPalindromeLength = 1;
-		int longestPalindromeStartIndex = 0;
-		int longestPalindromeEndIndex = 0;
-		for (int i = 0; i < dpTable.length; i++) {
-			for (int j = i + 1; j < dpTable.length; j++) {// 左上到右下对角线的上半区域。
+		/**/
+		char[] charArray = s.toCharArray();
+		int begin = 0;
+		int maxLen = 1;
+		for (int j = 1; j < len; j++) {// i: start, j: end
+			for (int i = 0; i < j; i++) {// 字符串子串，必有i<=j，左上到右下对角线的上半区域。逐渐向右移动j，i从小到大依次计算完以j结尾的子串是否是回文子串。
+				// 状态转移方程。dp[i][j] = (s[i] == s[j]) and dp[i + 1][j - 1]
+				if (charArray[i] != charArray[j]) {
+					dp[i][j] = false;
+				} else {// s[i] == s[j]
+					// 如果[i + 1, j - 1]长度小于 2(即该区间只有一个字符或为空)，即 j-1 - (i+1) + 1 < 2 -> j-i < 3，
+					// 则 charArray[i, j] 一定是一个回文子串。
+					if (j - i < 3) {
+						dp[i][j] = true;
+					} else {
+						dp[i][j] = dp[i + 1][j - 1];
+					}
+				}
 
+				// 以i开始、j结尾的子串判断完毕，如果dp[i][j] == true，表示子串 s[i..j]是回文，此时记录回文长度和起始位置
+				if (dp[i][j] && j - i + 1 > maxLen) {
+					maxLen = j - i + 1;
+					begin = i;
+				}
 			}
 		}
-
-		return s.substring(longestPalindromeStartIndex, longestPalindromeEndIndex + 1);
+		return s.substring(begin, begin + maxLen);
 	}
 	
 	/**
@@ -112,7 +128,8 @@ https://leetcode-cn.com/problems/longest-palindromic-substring/
 			head = head.next;
 		} while (head != null);
 
-		int i = 0, j = list.size() - 1;
+		int i = 0;
+		int j = list.size() - 1;
 		for (; i < j; i++, j--) {
 			if (list.get(i).val != list.get(j).val) {
 				return false;
