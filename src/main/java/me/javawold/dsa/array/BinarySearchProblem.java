@@ -118,4 +118,50 @@ public class BinarySearchProblem {
         return -1;
     }
 
+    /**
+     * 给定一个排序数组和一个目标值，在数组中找到目标值，并返回其索引。如果目标值不存在于数组中，返回它将会被按顺序插入的位置。
+     *
+     * 你可以假设数组中无重复元素。
+     *
+     * 示例 1:
+     *
+     * 输入: [1,3,5,6], 5
+     * 输出: 2
+     * 示例 2:
+     *
+     * 输入: [1,3,5,6], 2
+     * 输出: 1
+     *
+     * 来源：力扣（LeetCode）
+     * 链接：https://leetcode-cn.com/problems/search-insert-position
+     * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     *
+     * @param nums
+     * @param target
+     * @return
+     */
+    public int searchInsert(int[] nums, int target) {
+        if (nums == null || nums.length == 0) {
+            return -1;
+        }
+
+        int left = 0;
+        int right = nums.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+
+        // 最后一次的有效搜索空间长度为1，此时left=right=mid。
+        // 如果此时还没有找到目标值，需继续向左搜索，则搜索[mid(left),mid-1(right)]；需继续向右搜索，则搜索[mid+1(left),mid(right)]。
+        // 此时left就是目标值的插入点(insertion point)
+        return left;
+    }
+
 }
