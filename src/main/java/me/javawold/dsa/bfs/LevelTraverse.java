@@ -1,5 +1,6 @@
 package me.javawold.dsa.bfs;
 
+import me.javawold.dsa.linkedlist.ListNode;
 import me.javawold.dsa.tree.TreeNode;
 
 import java.util.*;
@@ -84,6 +85,63 @@ public class LevelTraverse {
         }
 
         return lists;
+    }
+
+    /**
+     * 给定一棵二叉树，设计一个算法，创建含有某一深度上所有节点的链表（比如，若一棵树的深度为 D，则会创建出 D 个链表）。返回一个包含所有深度的链表的数组。
+     *
+     *  
+     *
+     * 示例：
+     *
+     * 输入：[1,2,3,4,5,null,7,8]
+     *
+     *         1
+     *        /  \
+     *       2    3
+     *      / \    \
+     *     4   5    7
+     *    /
+     *   8
+     *
+     * 输出：[[1],[2,3],[4,5,7],[8]]
+     *
+     * 来源：力扣（LeetCode）
+     * 链接：https://leetcode-cn.com/problems/list-of-depth-lcci
+     * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     *
+     * @param root
+     * @return
+     */
+    public ListNode[] listOfDepth(TreeNode root) {
+        if (root == null){
+            return null;
+        }
+
+        List<ListNode> list = new ArrayList<>();
+        Deque<TreeNode> queue = new ArrayDeque<>();
+        queue.addLast(root);
+        while (!queue.isEmpty()) {
+            ListNode head = null;
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {//当前层的所有节点
+                TreeNode node = queue.removeFirst();
+
+                if (head == null){
+                    head = new ListNode(node.val);
+                    list.add(head);
+                }else{
+                    head.next = new ListNode(node.val);
+                    head = head.next;
+                }
+
+                //向队列中加入当前层节点的子节点，构成下一层节点。
+                if (node.left != null) queue.addLast(node.left);
+                if (node.right != null) queue.addLast(node.right);
+            }
+        }
+
+        return list.toArray(new ListNode[list.size()]);
     }
 
 }
