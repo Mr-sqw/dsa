@@ -1,6 +1,8 @@
 package me.javawold.dsa.greedy;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * 区间问题
@@ -64,6 +66,103 @@ public class Interval {
             }
         }
         return count;
+    }
+
+    /**
+     * 给出一个区间的集合，请合并所有重叠的区间。
+     *
+     *  
+     *
+     * 示例 1:
+     *
+     * 输入: intervals = [[1,3],[2,6],[8,10],[15,18]]
+     * 输出: [[1,6],[8,10],[15,18]]
+     * 解释: 区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].
+     * 示例 2:
+     *
+     * 输入: intervals = [[1,4],[4,5]]
+     * 输出: [[1,5]]
+     * 解释: 区间 [1,4] 和 [4,5] 可被视为重叠区间。
+     *
+     * 输入: intervals = [[[2,3],[4,5],[6,7],[8,9],[1,10]]
+     * 输出: [[[1,10]]
+     * 解释:
+     *
+     * 注意：输入类型已于2019年4月15日更改。 请重置默认代码定义以获取新方法签名。
+     *
+     * 来源：力扣（LeetCode）
+     * 链接：https://leetcode-cn.com/problems/merge-intervals
+     * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+     *
+     * @param intervals
+     * @return
+     */
+    public int[][] merge(int[][] intervals) {
+        if (intervals == null || intervals.length == 0)
+            return new int[0][];
+
+        //按区间的 startIndex升序、endIndex升序 排序。开始的早，结束的晚
+        Arrays.sort(intervals, (int[] a, int[] b) -> {
+            int compareResult = a[0] - b[0];
+            if (compareResult == 0) {
+                return a[1] - b[1];
+            } else {
+                return compareResult;
+            }
+        });
+
+        //
+        List<int[]> list = new ArrayList<>();
+        int start = intervals[0][0];
+        int end = intervals[0][1];
+        for (int[] interval : intervals) {
+            if (start <= interval[0] && interval[0] <= end) {//interval区间与合并区间[start,end]相交，更新end，合并区间向右扩充。
+                if (interval[1] > end){//合并区间向右扩充。
+                    end = interval[1];
+                }
+            } else {//interval区间与合并区间[start,end]不相交，旧的合并区间扩充结束；更新start、end，建立新的合并区间。
+                list.add(new int[]{start, end});
+
+                start = interval[0];
+                end = interval[1];
+            }
+        }
+        //
+        list.add(new int[]{start, end});
+
+        return list.toArray(new int[list.size()][]);
+    }
+
+
+    public int[][] mergeV2(int[][] intervals) {
+        if (intervals == null || intervals.length == 0)
+            return new int[0][];
+
+        //按区间的 endIndex升序 排序
+        Arrays.sort(intervals, (int[] a, int[] b) -> a[1] - b[1]);
+
+        //
+        List<int[]> list = new ArrayList<>();
+        int start = intervals[0][0];
+        int end = intervals[0][1];
+        for (int[] interval : intervals) {
+            if (/*start <= interval[0] && */interval[0] <= end) {//interval区间与合并区间[start,end]相交，更新start、end，合并区间向左向右扩充。
+                end = interval[1];//合并区间向右扩充。
+
+                if (interval[0] < start) {//合并区间向左扩充。
+                    start = interval[0];
+                }
+            } else {//interval区间与合并区间[start,end]不相交，旧的合并区间扩充结束；更新start、end，建立新的合并区间。
+                list.add(new int[]{start, end});
+
+                start = interval[0];
+                end = interval[1];
+            }
+        }
+        //
+        list.add(new int[]{start, end});
+
+        return list.toArray(new int[list.size()][]);
     }
 
 }
