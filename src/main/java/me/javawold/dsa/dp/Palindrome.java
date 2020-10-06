@@ -100,6 +100,65 @@ https://leetcode-cn.com/problems/longest-palindromic-substring/
 	}
 
 	/**
+	 * 647. 回文子串
+	 * 给定一个字符串，你的任务是计算这个字符串中有多少个回文子串。
+	 *
+	 * 具有不同开始位置或结束位置的子串，即使是由相同的字符组成，也会被视作不同的子串。
+	 *
+	 *
+	 *
+	 * 示例 1：
+	 *
+	 * 输入："abc"
+	 * 输出：3
+	 * 解释：三个回文子串: "a", "b", "c"
+	 * 示例 2：
+	 *
+	 * 输入："aaa"
+	 * 输出：6
+	 * 解释：6个回文子串: "a", "a", "a", "aa", "aa", "aaa"
+	 *
+	 * @param s
+	 * @return
+	 */
+	public int countSubstrings(String s) {
+		if (s == null || s.length() == 0)
+			return 0;
+
+		char[] chars = s.toCharArray();
+		// 状态定义。dp[i][j]：下标为[i, j]的子串是否为回文串。
+		boolean[][] dp = new boolean[chars.length][chars.length];
+		// 初始化状态。每个下标处的单个字符 构成的子串一定是回文串。
+		for (int i = 0; i < chars.length; i++) {
+			dp[i][i] = true;
+		}
+		// 状态转移方程。dp[i][j] = (s[i] == s[j]) and dp[i + 1][j - 1]
+		for (int end = 1; end < chars.length; end++) {
+			for (int start = 0; start < end; start++) {
+				if (chars[start] == chars[end]) {
+					if ((end - 1) - (start + 1) <= 0) {
+						dp[start][end] = true;
+					} else if (dp[start + 1][end - 1]) {
+						dp[start][end] = true;
+					} else {
+						dp[start][end] = false;
+					}
+				} else {
+					dp[start][end] = false;
+				}
+			}
+		}
+		//
+		int count = 0;
+		for (int end = 0; end < chars.length; end++) {
+			for (int start = 0; start <= end; start++) {
+				if (dp[start][end]) count++;
+			}
+		}
+		return count;
+	}
+
+	/**
 	 * 请判断一个链表是否为回文链表。
 	 *
 	 * 示例 1:
