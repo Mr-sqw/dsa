@@ -315,4 +315,91 @@ public class LinkedListProblem {
         }
     }
 
+    /**
+     * 92. 反转链表 II
+     * 反转从位置 m 到 n 的链表。请使用一趟扫描完成反转。
+     *
+     * 说明:
+     * 1 ≤ m ≤ n ≤ 链表长度。
+     *
+     * 示例:
+     *
+     * 输入: 1->2->3->4->5->NULL, m = 2, n = 4
+     * 输出: 1->4->3->2->5->NULL
+     *
+     * @param head
+     * @param m
+     * @param n
+     * @return
+     */
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        if (head == null || m >= n)
+            return head;
+
+        ListNode prev = null;
+        ListNode curr = head;
+        ListNode tailBeforeReverse = null;
+        ListNode tailAfterReverse = null;
+        int i = 1;
+        do {
+            if (i < m) {
+                /*向后遍历*/
+                prev = curr;
+                curr = curr.next;
+            } else if (i == m) {
+                tailBeforeReverse = prev;//!可能为null
+                tailAfterReverse = curr;
+
+                /*向后遍历*/
+                prev = curr;
+                curr = curr.next;
+            } else if (i > m && i < n) {//反转
+                ListNode next = curr.next;
+                curr.next = prev;//反转
+
+                /*向后遍历*/
+                prev = curr;
+                curr = next;
+            } else if (i == n) {//curr：反转后的head
+                ListNode next = curr.next;
+                curr.next = prev;//反转
+
+                //反转后的tail 的next 指向 当前的next。
+                tailAfterReverse.next = next;
+
+                //无需再向后遍历，直接返回。
+                if (tailBeforeReverse == null) {//从第一个开始反转(m == 1)，直接返回 反转后的head
+                    return curr;
+                } else {//不是从第一个开始反转(m == 1)
+                    //反转前的tail 的next 指向 反转后的head。
+                    tailBeforeReverse.next = curr;
+                    return head;
+                }
+            }
+//            else {// i> n
+//                /*无需再向后遍历*/
+//                prev = curr;
+//                curr = curr.next;
+//            }
+
+            i++;
+        } while (curr != null);
+
+        i--;//获取实际的节点数。
+        if (i <= m) {//链表节点数小于等于m，无需反转
+            return head;
+        } else/* if (i< n)*/ {//链表节点数 大于m小于n。prev：反转后的head(链表的尾节点(prev))
+            //反转后的tail 的next 指向 null。
+            tailAfterReverse.next = null;
+
+            if (tailBeforeReverse == null) {//从第一个开始反转(m == 1)，直接返回 反转后的head(链表的尾节点(prev))
+                return prev;
+            } else {//不是从第一个开始反转(m == 1)
+                //反转前的tail 的next 指向 反转后的head(链表的尾节点(prev))。
+                tailBeforeReverse.next = prev;
+                return head;
+            }
+        }
+    }
+
 }
