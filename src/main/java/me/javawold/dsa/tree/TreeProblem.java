@@ -1,5 +1,7 @@
 package me.javawold.dsa.tree;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -338,5 +340,65 @@ p、q 为不同节点且均存在于给定的二叉树中。
 			}
 		}
 	}
+
+    /**
+     * 114. 二叉树展开为链表
+     * 给定一个二叉树，原地将它展开为一个单链表。
+     *
+     *
+     *
+     * 例如，给定二叉树
+     *
+     *     1
+     *    / \
+     *   2   5
+     *  / \   \
+     * 3   4   6
+     * 将其展开为：
+     *
+     * 1
+     *  \
+     *   2
+     *    \
+     *     3
+     *      \
+     *       4
+     *        \
+     *         5
+     *          \
+     *           6
+     *
+     * @param root
+     */
+    public void flatten(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        List<TreeNode> list = new LinkedList<>();
+        doFlatten(root, list);
+        /**/
+        for (int i = 0; i < list.size() - 1; i++) {
+            TreeNode node = list.get(i);
+            node.left = null;
+            node.right = list.get(i + 1);
+        }
+        //
+        list.get(list.size() - 1).left = null;
+        list.get(list.size() - 1).right = null;
+    }
+
+    private void doFlatten(TreeNode root, List<TreeNode> list) {
+        if (root == null) {
+            return;
+        }
+
+        //先根节点
+        list.add(root);
+        //再左子树
+        doFlatten(root.left, list);
+        //最后右子树
+        doFlatten(root.right, list);
+    }
 
 }
