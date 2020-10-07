@@ -94,7 +94,7 @@ public class BitOpProblem {
 	public int hammingDistance(int x, int y) {
 		int distance = 0;
 		int power2 = 1;
-		for (int i = 0; i < 31; i++, power2 *= 2) {// 找出第1到第31位 不同
+		for (int i = 0; i < 31; i++, power2 <<= 1) {// 找出第1位 到 第31位 不同
 			int bitX = x & power2;
 			int bitY = y & power2;
 			if (bitX != bitY) {
