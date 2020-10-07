@@ -64,6 +64,49 @@ public class BitOpProblem {
         return sb.reverse().toString();
     }
 
+    /**
+     * 461. 汉明距离
+两个整数之间的汉明距离指的是这两个数字对应二进制位不同的位置的数目。
+
+给出两个整数 x 和 y，计算它们之间的汉明距离。
+
+注意：
+0 ≤ x, y < 231.
+
+示例:
+
+输入: x = 1, y = 4
+
+输出: 2
+
+解释:
+1   (0 0 0 1)
+4   (0 1 0 0)
+       ↑   ↑
+
+上面的箭头指出了对应二进制位不同的位置。
+     *
+     * @param x
+     * @param y
+     * @return
+     * @author suqianwen 2020年10月7日
+     */
+	public int hammingDistance(int x, int y) {
+		int distance = 0;
+		int power2 = 1;
+		for (int i = 0; i < 31; i++, power2 *= 2) {// 找出第1到第31位 不同
+			int bitX = x & power2;
+			int bitY = y & power2;
+			if (bitX != bitY) {
+				distance++;
+			}
+		}
+		if ((x < 0 && y > 0) || (x > 0 && y < 0)) {// 一正一负，最高位/第32位 不同
+			distance++;
+		}
+		return distance;
+	}
+
     public static void main(String[] args){
         new BitOpProblem().addBinary("11","1");
     }
