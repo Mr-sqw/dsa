@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import me.javawold.dsa.Builder;
+
 /**
  * <br>
  * <br>
@@ -198,6 +200,7 @@ p、q 为不同节点且均存在于给定的二叉树中。
 	}
 
 	/**
+	 * 543. 二叉树的直径
 	 * 给定一棵二叉树，你需要计算它的直径长度。一棵二叉树的直径长度是任意两个结点路径长度中的最大值。这条路径可能穿过也可能不穿过根结点。
 
  
@@ -228,12 +231,29 @@ p、q 为不同节点且均存在于给定的二叉树中。
 		if (root == null) {
 			return 0;
 		}
-		
-		int leftMaxDepth = diameterOfBinaryTree(root.left);
-		int rightMaxDepth  = diameterOfBinaryTree(root.right);
 
-		return leftMaxDepth + rightMaxDepth+1;
-    }
+		AtomicInteger maxNodeCount = new AtomicInteger(0);// 最长直径所在路径的节点数
+		doDiameterOfBinaryTree(root, maxNodeCount);
+
+		return maxNodeCount.get() - 1;
+	}
+
+	private int doDiameterOfBinaryTree(TreeNode root, AtomicInteger maxNodeCount) {
+		if (root == null) {
+			return 0;
+		}
+
+		// 左子树的最长路径的节点数
+		int leftMaxNodeCount = doDiameterOfBinaryTree(root.left, maxNodeCount);
+		int rightMaxNodeCount = doDiameterOfBinaryTree(root.right, maxNodeCount);
+
+		// 当前子树最长直径所在路径：树根节点连接的左子树的最长路径 + 右子树的最长路径
+		int nodeCount = leftMaxNodeCount + rightMaxNodeCount + 1;
+		maxNodeCount.set(Math.max(maxNodeCount.get(), nodeCount));
+
+		// 返回该子树的最长路径的节点数
+		return Math.max(leftMaxNodeCount, rightMaxNodeCount) + 1;
+	}
 
 	/**
 	 * 给定两个二叉树，想象当你将它们中的一个覆盖到另一个上时，两个二叉树的一些节点便会重叠。
@@ -400,5 +420,11 @@ p、q 为不同节点且均存在于给定的二叉树中。
         //最后右子树
         doFlatten(root.right, list);
     }
+
+    public static void main(String[] args) {
+		Integer[] arr = { 2, 3, null, 1 };
+		TreeNode root = Builder.buildFST(arr);
+		new TreeProblem().diameterOfBinaryTree(root);
+	}
 
 }

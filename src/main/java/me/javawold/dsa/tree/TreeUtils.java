@@ -39,20 +39,26 @@ public class TreeUtils {
 			for (int j = 0; j < size; j++) {// 当前层
 				TreeNode parent = queue.remove();
 
-				//
+				// 左节点
 				if (i < arr.length) {
-					TreeNode left = new TreeNode(arr[i++]);
-					parent.left = left;
-					queue.add(left);
+					if (arr[i] != null) {
+						TreeNode left = new TreeNode(arr[i]);
+						parent.left = left;
+						queue.add(left);
+					}
+					i++;
 				} else {
 					return root;
 				}
 
-				//
+				// 右节点
 				if (i < arr.length) {
-					TreeNode right = new TreeNode(arr[i++]);
-					parent.right = right;
-					queue.add(right);
+					if (arr[i] != null) {
+						TreeNode right = new TreeNode(arr[i]);
+						parent.right = right;
+						queue.add(right);
+					}
+					i++;
 				} else {
 					return root;
 				}
