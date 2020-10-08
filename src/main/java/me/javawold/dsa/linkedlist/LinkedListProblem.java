@@ -1,7 +1,11 @@
 package me.javawold.dsa.linkedlist;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import me.javawold.dsa.Builder;
 
 public class LinkedListProblem {
 
@@ -525,6 +529,30 @@ pos 为 -1 或者链表中的一个 有效索引 。
 		if (head == null) {
 			return false;
 		}
+		if (head.next == null) {// 单节点
+			return false;
+		}
+		if (head.next == head) {// 环形单节点
+			return true;
+		}
+
+		ListNode fast = head;
+		ListNode slow = head;
+		while (fast != null && fast.next != null) {
+			fast = fast.next.next;
+			slow = slow.next;
+			/* 如果链表有环，则快慢指针一直在环内移动，并且某个时候，快指针一定会赶上慢指针 */
+			if (fast == slow) {
+				return true;
+			}
+		}
+		return false;// 如果链表无环，则快指针提前到达尾节点，结束
+	}
+
+	public boolean hasCycleV2(ListNode head) {
+		if (head == null) {
+			return false;
+		}
 
 		ListNode fast = head.next;
 		ListNode slow = head;
@@ -536,7 +564,105 @@ pos 为 -1 或者链表中的一个 有效索引 。
 			fast = fast.next.next;
 			slow = slow.next;
 		}
-		return fast == slow;// 如果链表无环，则快指针提前到达尾节点，结束
+		return fast == slow;// 链表无环，则快指针到达尾节点，结束
+	}
+
+	/**
+	 * 142. 环形链表 II
+给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+
+为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。
+
+说明：不允许修改给定的链表。
+
+ 
+
+示例 1：
+
+输入：head = [3,2,0,-4], pos = 1
+输出：tail connects to node index 1
+解释：链表中有一个环，其尾部连接到第二个节点。
+
+
+示例 2：
+
+输入：head = [1,2], pos = 0
+输出：tail connects to node index 0
+解释：链表中有一个环，其尾部连接到第一个节点。
+
+
+示例 3：
+
+输入：head = [1], pos = -1
+输出：no cycle
+解释：链表中没有环。
+
+
+ 
+
+进阶：
+你是否可以不用额外空间解决此题？
+	 *
+	 * @param head
+	 * @return
+	 * @author suqianwen 2020年10月8日
+	 */
+	public ListNode detectCycle(ListNode head) {
+		if (head == null) {
+			return null;
+		}
+		if (head.next == null) {// 单节点
+			return null;
+		}
+		if (head.next == head) {// 环形单节点
+			return head;
+		}
+
+		ListNode fast = head;
+		ListNode slow = head;
+		while (fast != null && fast.next != null) {
+			fast = fast.next.next;
+			slow = slow.next;
+			// 假设 头节点到入环的第一个节点(不包含)走过的步数为a；走完环的一圈所需的步数为b。
+			// 快指针走过的步数为f，慢指针走过的步数为s。
+			/* 如果链表有环，则快慢指针一直在环内移动，并且某个时候，快指针一定会赶上慢指针，此时： */
+			// f = 2s。fast走的步数是slow步数的 2 倍。
+			// f = s + nb。fast比slow多走了n个环的长度。
+			// 两式相减得：f = 2nb，s = nb，即fast和slow都分别走了n倍 环的周长。
+			if (fast == slow) {
+				// 所有从 头节点 走到 入环第一个节点 的步数 都是：a+nb
+				// 因此slow只需再向前走a步即可到达 入环的第一个节点，从head开始再向前走a步也即可到达 入环的第一个节点。
+				while (head != slow) {
+					head = head.next;
+					slow = slow.next;
+				}
+				return head;
+			}
+		}
+
+		return null;// 如果链表无环，则快指针提前到达尾节点，结束
+    }
+
+	public ListNode detectCycleV2(ListNode head) {
+		if (head == null) {
+			return head;
+		}
+
+		Set<ListNode> set = new HashSet<>();
+		do {
+			if (!set.add(head)) {// 重复的节点，则该节点一定是入环的第一个节点
+				return head;
+			}
+
+			head = head.next;
+		} while (head != null);
+
+		return null;// 链表无环
+	}
+
+	public static void main(String[] args) {
+		ListNode head = Builder.buildCycleLinkedList(new int[] { 3, 2, 0, -4 }, 3, 1);
+		new LinkedListProblem().detectCycle(head);
 	}
 
 }
