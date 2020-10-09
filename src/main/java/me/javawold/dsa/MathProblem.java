@@ -164,7 +164,7 @@ public class MathProblem {
 			return Collections.emptyList();
 		}
 
-		/* 将 (已经出现的元素值-1) 作为下标，该下标对应的元素值标记为 -1*元素值 ，即表示：该下标+1 的元素值已经出现过。 */
+		/* 原地哈希：将 (已经出现的元素值-1) 作为下标，该下标对应的元素值标记为 -1*元素值 ，即表示：该下标+1 的元素值已经出现过。 */
 		for (int i = 0; i < nums.length; i++) {
 			int index = Math.abs(nums[i]) - 1;
 			if (nums[index] > 0) {
@@ -181,9 +181,107 @@ public class MathProblem {
 		return result;
     }
 
+	/**
+	 * 287. 寻找重复数
+给定一个包含 n + 1 个整数的数组 nums，其数字都在 1 到 n 之间（包括 1 和 n），可知至少存在一个重复的整数。假设只有一个重复的整数，找出这个重复的数。
+
+示例 1:
+
+输入: [1,3,4,2,2]
+输出: 2
+示例 2:
+
+输入: [3,1,3,4,2]
+输出: 3
+说明：
+
+不能更改原数组（假设数组是只读的）。
+只能使用额外的 O(1) 的空间。
+时间复杂度小于 O(n2) 。
+数组中只有一个重复的数字，但它可能不止重复出现一次。
+	 *
+	 * @param nums
+	 * @return
+	 * @author suqianwen 2020年10月9日
+	 */
+	// 二分查找：
+	public int findDuplicate(int[] nums) {
+		if (nums == null || nums.length == 0) {
+			return 0;
+		}
+
+		int left = 1;
+		int right = nums.length - 1;
+		while (left < right) {
+			int mid = left + (right - left) / 2;
+			int count = 0;
+			for (int i = 0; i < nums.length; i++) {
+				if (nums[i] <= mid) {
+					count++;
+				}
+			}
+
+			if (count == mid) {// 如果小于等于mid的数的个数 等于 mid。则重复的数的范围一定在[mid+1, right](右半部分)
+				left = mid + 1;
+			} else if (count > mid) {// 如果小于等于mid的数的个数 大于 mid。则重复的数的范围一定在[left, mid](左半部分)
+				right = mid;
+			} else {// 如果小于等于mid的数的个数 小于 mid。则重复的数的范围一定在[mid+1, right](右半部分)
+				left = mid + 1;
+			}
+		}
+
+		return left;
+    }
+
+	// 错误, why ?
+	public int findDuplicateV11(int[] nums) {
+		if (nums == null || nums.length == 0) {
+			return 0;
+		}
+
+		int left = 1;
+		int right = nums.length - 1;
+		while (left < right) {
+			int mid = left + (right - left) / 2;
+			int count = 0;
+			for (int i = 0; i < nums.length; i++) {
+				if (nums[i] < mid) {
+					count++;
+				}
+			}
+			if (count < mid) {// 如果小于mid的数的个数 小于 mid。则重复的数的范围一定在[mid, right]
+				left = mid;
+			} else {// 如果小于mid的数的个数 大于等于 mid。则重复的数的范围一定在[left,mid-1]
+				right = mid - 1;
+			}
+		}
+
+		return left;
+	}
+
+	// 原地哈希：修改了原数组
+	public int findDuplicateV2(int[] nums) {
+		if (nums == null || nums.length == 0) {
+			return 0;
+		}
+
+		for (int i = 0; i < nums.length; i++) {
+			int index = Math.abs(nums[i]) - 1;// 当前nums[i]对应的index
+			if (nums[index] < 0) {
+				return index + 1;// index第二次出现，此时index+1(或Math.abs(nums[i]))即为重复的数
+			} else {
+				nums[index] = nums[index] * -1;// 标记第一次出现的index的nums[index] 为 -nums[index]。
+			}
+		}
+		return 0;
+	}
+
 	public static void main(String[] args) {
-		int[] nums = {4,3,2,7,8,2,3,1};
-		new MathProblem().findDisappearedNumbers(nums );
+		int[] nums = // {4,3,2,7,8,2,3,1};
+				//{ 3, 1, 3, 4, 2 };
+				{2,2,2,2,2};
+		new MathProblem().// findDisappearedNumbers(nums);
+				findDuplicate(nums);
 	}
 
 }
