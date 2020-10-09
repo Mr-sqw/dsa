@@ -9,6 +9,7 @@ import java.util.Map;
 public class LRUCache {
 
     /**
+     *146. LRU缓存机制
      * 运用你所掌握的数据结构，设计和实现一个  LRU (最近最少使用) 缓存机制。它应该支持以下操作： 获取数据 get 和 写入数据 put 。
      *
      * 获取数据 get(key) - 如果关键字 (key) 存在于缓存中，则获取关键字的值（总是正数），否则返回 -1。
@@ -26,7 +27,7 @@ public class LRUCache {
      *
      * LRUCache cache = new LRUCache( 2 /* 缓存容量 */ /*);
      *
-             *cache.put(1,1);
+     *cache.put(1,1);
      *cache.put(2,2);
      *cache.get(1);       // 返回  1
      *cache.put(3,3);    // 该操作会使得关键字 2 作废
@@ -77,14 +78,31 @@ public class LRUCache {
             this.map.put(key, node);
             this.doubleEndedList.enqueue(node);
         } else {//老节点
-            node.val = value;
-            /*移除老节点，将老节点重新加入队尾*/
-            this.doubleEndedList.remove(node);
+			/* 移除老节点，将老节点重新加入队尾 */
+			this.doubleEndedList.remove(node);
 
-            this.map.put(key, node);
-            this.doubleEndedList.enqueue(node);//将老节点重新加入队尾
+			//
+			node.val = value;
+			node.prev = null;
+			node.next = null;
+			//
+			this.map.put(key, node);
+			this.doubleEndedList.enqueue(node);// 将老节点重新加入队尾
         }
     }
+
+	public static void main(String[] args) {
+		LRUCache cache = new LRUCache(2 /* 缓存容量 */ );
+		cache.put(1, 1);
+		cache.put(2, 2);
+		cache.get(1); // 返回 1
+		cache.put(3, 3); // 该操作会使得关键字 2 作废
+		cache.get(2); // 返回 -1 (未找到)
+		cache.put(4, 4); // 该操作会使得关键字 1 作废
+		cache.get(1); // 返回 -1 (未找到)
+		cache.get(3); // 返回 3
+		cache.get(4); // 返回 4 
+	}
 
 }
 
@@ -98,46 +116,74 @@ class DoubleEndedList {
     private Node tail;
 
     /**
-     * 入队
+     * (队尾)入队
      *
      * @param node
      */
     public void enqueue(Node node) {
-        if (tail == null) {
+        if (tail == null) {// 空队列
             head = node;
             tail = node;
         } else {
             tail.next = node;
+            node.prev = tail;
+
             tail = node;
         }
     }
 
     /**
-     * 出队
+     * (队头)出队
      *
      * @return
      */
     public Node dequeue() {
-        if (this.head == null) {
-            return null;
-        }
+		if (this.head == null) {// 空队列
+			return null;
+		}
 
-        Node head = this.head;
+		Node oldHead = this.head;
 
-        if (head.next != null) {
-            head.next.prev = null;
-        }
-        this.head = head.next;
+		this.head = oldHead.next;// 新的头节点
+		if (this.head != null) {
+			this.head.prev = null;
+		}
 
-        return head;
+		if (oldHead == this.tail) {// 队列只有一个节点
+			this.tail = null;
+		}
+
+		return oldHead;
     }
 
     /**
      * @param node
      */
     public void remove(Node node) {
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
+		if (node == null) {
+			return;
+		}
+
+		if (node == this.head) {// 当前节点是头节点，移除头节点=出队
+			dequeue();
+			return;
+		}
+
+		if (node == this.tail) {// 当前节点是尾节点
+			this.tail = node.prev;// 更新tail
+
+			node.prev.next = null;
+
+			return;
+		}
+
+		if (node.prev != null) {
+			node.prev.next = node.next;
+		}
+
+		if (node.next != null) {
+			node.next.prev = node.prev;
+		}
     }
 
     static class Node {
