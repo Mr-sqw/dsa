@@ -3,6 +3,7 @@ package me.javawold.dsa.graph;
 public class GraphProblem {
 
     /**
+     *200. 岛屿数量
      * 给你一个由 '1'（陆地）和 '0'（水）组成的的二维网格，请你计算网格中岛屿的数量。
      *
      * 岛屿总是被水包围，并且每座岛屿只能由水平方向或竖直方向上相邻的陆地连接形成。
@@ -45,12 +46,9 @@ public class GraphProblem {
 
 		int rowLength = grid.length;
 		int columnLength = grid[0].length;
-		boolean[][] visited = new boolean[rowLength][];
-		for (int i = 0; i < rowLength; i++) {
-			visited[i] = new boolean[columnLength];
-		}
+		boolean[][] visited = new boolean[rowLength][columnLength];
 
-		int num = 0;
+		int num = 0;// 连通图的个数
 		while (true) {
 			/* 1.找出未访问且是陆地的坐标 */
 			int i = 0;// 顶点下标
@@ -58,42 +56,71 @@ public class GraphProblem {
 			label: for (; i < rowLength; i++) {
 				for (; j < columnLength; j++) {
 					if (!visited[i][j]) {
-						if (grid[i][j] == '1') {
+						visited[i][j] = true;
+
+						if (grid[i][j] == '1') {// 陆地
 							break label;
 						}
-
-						visited[i][j] = true;
 					}
 				}
 			}
-
-			/* 2.以1中找出的坐标为基准，进行dfs，找到一份连通图 */
-			dfs(i, rowLength, columnLength, grid, visited);
-
-			num++;
-
+			
 			/* 访问完整个坐标系，结束 */
-			if (i == rowLength && j == columnLength) {
+			if (i == rowLength) {
 				return num;
 			}
+
+			/* 2.以1中找出的坐标为基准，进行dfs，找到一份连通图 */
+			dfs(i, j, rowLength, columnLength, grid, visited);
+			num++;
 		}
 	}
 
-	public void dfs(int rowIndex, int rowLength, int columnLength, char[][] grid, boolean[][] visited) {
-		if (rowIndex < 0 || rowIndex >= rowLength) {
-			return;
-		}
+	/**
+	 * 以坐标(rowIndex, columnIndex)为基准，进行dfs，找到一份连通图
+	 *
+	 * @param rowIndex
+	 * @param columnIndex
+	 * @param rowLength
+	 * @param columnLength
+	 * @param grid
+	 * @param visited
+	 * @author suqianwen 2020年10月9日
+	 */
+	public void dfs(int rowIndex, int columnIndex,  int rowLength, int columnLength, char[][] grid, boolean[][] visited) {
+//		if (rowIndex < 0 || rowIndex >= rowLength) {
+//			return;
+//		}
 
-		for (int j = 0; j < columnLength; j++) {
+		// visited[rowIndex][columnIndex] = true;
+
+		for (int j = 0; j != columnIndex && j < columnLength; j++) {// grid[rowIndex][j] 为 顶点rowIndex 的 邻接点列表
 			if (!visited[rowIndex][j]) {
 
 				visited[rowIndex][j] = true;
 
-				if (grid[rowIndex][j] == '1') {
-					dfs(j, rowLength, columnLength, grid, visited);
+				if (grid[rowIndex][j] == '1') {// 陆地
+					dfs(j, rowIndex, rowLength, columnLength, grid, visited);
 				}
 			}
 		}
+	}
+	
+	public static void main(String[] args) {
+		char[][] grid = 
+		{
+			{'1','1','1','1','0'},
+			{'1','1','0','1','0'},
+			{'1','1','0','0','0'},
+			{'0','0','0','0','0'}
+		};
+//		{
+//			{'1','1','0','0','0'},
+//		    {'1','1','0','0','0'},
+//		    {'0','0','1','0','0'},
+//		    {'0','0','0','1','1'}
+//		};
+		new GraphProblem().numIslands(grid);
 	}
 
 }
