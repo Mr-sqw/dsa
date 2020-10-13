@@ -1,10 +1,11 @@
 package me.javawold.dsa.tree.bst;
 
+import me.javawold.dsa.Builder;
 import me.javawold.dsa.tree.TreeNode;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class BSTProblem {
 
@@ -180,5 +181,85 @@ public class BSTProblem {
         }
         return root;//原样接入，以前是某个节点的左孩子还是左孩子，以前是某个节点的右孩子还是右孩子
     }
+
+    /**
+     * 530. 二叉搜索树的最小绝对差
+给你一棵所有节点为非负值的二叉搜索树，请你计算树中任意两节点的差的绝对值的最小值。
+
+ 
+
+示例：
+
+输入：
+
+   1
+    \
+     3
+    /
+   2
+
+输出：
+1
+
+解释：
+最小绝对差为 1，其中 2 和 1 的差的绝对值为 1（或者 2 和 3）。
+     *
+     * @param root
+     * @return
+     * @author suqianwen 2020年10月12日
+     */
+	public int getMinimumDifference(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+
+		AtomicReference<TreeNode> last = new AtomicReference<>();
+		AtomicInteger minDiff = new AtomicInteger(Integer.MAX_VALUE);
+		doGetMinimumDifference(root, last, minDiff);
+		return minDiff.get();
+	}
+
+	private void doGetMinimumDifference(TreeNode root, AtomicReference<TreeNode> last, AtomicInteger minDiff) {
+		if (root == null) {
+			return;
+		}
+
+		// 左
+		doGetMinimumDifference(root.left, last, minDiff);
+		// 根
+		if (last.get() != null) {
+			int diff = root.val - last.get().val;
+			if (diff < minDiff.get()) {
+				minDiff.set(diff);
+			}
+		}
+		last.set(root);
+		// 右
+		doGetMinimumDifference(root.right, last, minDiff);
+	}
+
+	void doGetMaximumDifference(TreeNode root, AtomicInteger min, AtomicInteger max) {
+		if (root == null) {
+			return;
+		}
+
+		//
+		if (root.val < min.get()) {
+			min.set(root.val);
+		}
+		if (root.val > max.get()) {
+			max.set(root.val);
+		}
+		//
+		doGetMaximumDifference(root.left, min, max);
+		//
+		doGetMaximumDifference(root.right, min, max);
+	}
+
+	public static void main(String[] args) {
+		Integer[] arr = { 1, null, 3, 2 };
+		TreeNode root = Builder.buildFST(arr);
+		new BSTProblem().getMinimumDifference(root);
+	}
 
 }

@@ -3,7 +3,6 @@ package me.javawold.dsa.tree;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import me.javawold.dsa.Builder;
 
 /**
@@ -421,7 +420,7 @@ p、q 为不同节点且均存在于给定的二叉树中。
         doFlatten(root.right, list);
     }
 
-    public static void main(String[] args) {
+	public static void main(String[] args) {
 		Integer[] arr = { 2, 3, null, 1 };
 		TreeNode root = Builder.buildFST(arr);
 		new TreeProblem().diameterOfBinaryTree(root);

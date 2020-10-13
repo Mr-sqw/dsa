@@ -95,12 +95,7 @@ public class Leetcode2020Fall {
     }
 
     /*
-    3. 秋叶收藏集
-通过的用户数268
-尝试过的用户数853
-用户总通过次数268
-用户总提交次数1643
-题目难度Medium
+    LCP 19. 秋叶收藏集
 小扣出去秋游，途中收集了一些红叶和黄叶，他利用这些叶子初步整理了一份秋叶收藏集 leaves， 字符串 leaves 仅包含小写字符 r 和 y， 其中字符 r 表示一片红叶，字符 y 表示一片黄叶。
 出于美观整齐的考虑，小扣想要将收藏集中树叶的排列调整成「红、黄、红」三部分。每部分树叶数量可以不相等，但均需大于等于 1。每次调整操作，小扣可以将一片红叶替换成黄叶或者将一片黄叶替换成红叶。请问小扣最少需要多少次调整操作才能将秋叶收藏集调整完毕。
 
@@ -125,15 +120,44 @@ public class Leetcode2020Fall {
 3 <= leaves.length <= 10^5
 leaves 中只包含字符 'r' 和字符 'y'
      */
-    public int minimumOperations(String leaves) {//"rrryyyyyyyyrr"
-        if (leaves == null || leaves.length() == 0) {
-            return 0;
-        }
+	public int minimumOperations(String leaves) {// "rrryyyyyyyyrr"
+		if (leaves == null || leaves.length() == 0) {
+			return 0;
+		}
 
-        int count = 0;
+		// dp[0][i] 代表从头开始全部修改成红色(全红/纯红)需要修改几次。如果不是红色，就比之前加一
+		// dp[1][i] 代表从头开始是红色，然后现在是黄色（红黄），需要修改几次。可以从上一个纯红状态变化过来，也可以从上一个本身状态变化过来
+		// dp[2][i]
+		// 代表从头开始是红色，然后变成黄色，又变成红色（红黄红），需要修改几次，根据i是红是黄，判断转移情况。可以从上一个红黄状态变化过来，也可以从上一个本身状态变化过来
+		int[][] dp = new int[3][leaves.length()];
+		char[] chars = leaves.toCharArray();
+		for (int i = 0; i < leaves.length(); i++) {
+			/* 全红 */
+			if (i == 0) {
+				dp[0][i] = (chars[i] != 'r') ? 1/*不是红色，需要变化1次变成红色*/ : 0;
+			} else {
+				dp[0][i] = dp[0][i - 1] + ((chars[i] != 'r') ? 1 : 0);
+			}
 
-        return count;
-    }
+			/* 红黄 */
+			if (i == 0) {
+				dp[1][i] = dp[0][i];
+			} else {
+				dp[1][i] = Math.min(dp[0][i - 1] + ((chars[i] != 'y') ? 1 : 0),
+						dp[1][i - 1] + ((chars[i] != 'y') ? 1 : 0));
+			}
+
+			/* 红黄红 */
+			if (i < 2) { // i = 0, 1
+				dp[2][i] = dp[1][i];
+			} else {
+				dp[2][i] = Math.min(dp[1][i - 1] + ((chars[i] != 'r') ? 1 : 0),
+						dp[2][i - 1] + ((chars[i] != 'r') ? 1 : 0));
+			}
+		}
+
+		return dp[2][leaves.length() - 1];
+	}
 
     /*
     4. 快速公交
