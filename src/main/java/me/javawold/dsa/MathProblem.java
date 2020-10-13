@@ -276,6 +276,54 @@ public class MathProblem {
 		return 0;
 	}
 
+	/**
+	 * 581. 最短无序连续子数组
+	 * 给定一个整数数组，你需要寻找一个连续的子数组，如果对这个子数组进行升序排序，那么整个数组都会变为升序排序。
+	 *
+	 * 你找到的子数组应是最短的，请输出它的长度。
+	 *
+	 * 示例 1:
+	 *
+	 * 输入: [2, 6, 4, 8, 10, 9, 15]
+	 * 输出: 5
+	 * 解释: 你只需要对 [6, 4, 8, 10, 9] 进行升序排序，那么整个表都会变为升序排序。
+	 * 说明 :
+	 *
+	 * 输入的数组长度范围在 [1, 10,000]。
+	 * 输入的数组可能包含重复元素 ，所以升序的意思是<=。
+	 *
+	 * @param nums
+	 * @return
+	 */
+	public int findUnsortedSubarray(int[] nums) {
+		if (nums == null || nums.length == 0) {
+			return 0;
+		}
+
+		//左半部分 中间无序部分 右半部分
+		//初始化
+		int len = nums.length;
+		int min = nums[len - 1];
+		int max = nums[0];//中间无序部分
+		int begin = 0;
+		int end = -1;
+		//遍历
+		for (int i = 0; i < len; i++) {
+			if (nums[i] < max) {      //从左到右维持最大值，寻找右边界end
+				end = i;
+			} else {
+				max = nums[i];
+			}
+
+			if (nums[len - 1 - i] > min) {    //从右到左维持最小值，寻找左边界begin
+				begin = len - i - 1;
+			} else {
+				min = nums[len - i - 1];
+			}
+		}
+		return end - begin + 1;
+	}
+
 	public static void main(String[] args) {
 		int[] nums = // {4,3,2,7,8,2,3,1};
 				//{ 3, 1, 3, 4, 2 };
