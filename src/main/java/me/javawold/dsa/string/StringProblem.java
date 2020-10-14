@@ -1,5 +1,9 @@
 package me.javawold.dsa.string;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * <br>
  * <br>
@@ -44,5 +48,60 @@ public class StringProblem {
 			s[j] = c;
 		}
     }
+
+	/**
+	 * 1002. 查找常用字符
+给定仅有小写字母组成的字符串数组 A，返回列表中的每个字符串中都显示的全部字符（包括重复字符）组成的列表。例如，如果一个字符在每个字符串中出现 3 次，但不是 4 次，则需要在最终答案中包含该字符 3 次。
+
+你可以按任意顺序返回答案。
+
+ 
+
+示例 1：
+
+输入：["bella","label","roller"]
+输出：["e","l","l"]
+示例 2：
+
+输入：["cool","lock","cook"]
+输出：["c","o"]
+ 
+	 *
+	 * @param A
+	 * @return
+	 * @author suqianwen 2020年10月14日
+	 */
+	public List<String> commonChars(String[] A) {
+		if (A == null || A.length == 0) {
+			return Collections.emptyList();
+		}
+
+		int rowLength = A.length;
+		int columnLength = 26;
+		int[][] countMatrix = new int[rowLength][columnLength];
+		for (int i = 0; i < rowLength; i++) {
+			char[] chars = A[i].toCharArray();
+			for (char c : chars) {
+				countMatrix[i][c - 'a']++;// 统计 当前字符在当前字符串中 的出现次数
+			}
+		}
+		/**/
+		List<String> list = new ArrayList<>();
+		for (int j = 0; j < columnLength; j++) {// 字符a-z
+			int minCount = countMatrix[0][j];// 当前字符在所有字符串中出现的最小次数
+			for (int i = 1; i < rowLength && minCount != 0; i++) {
+				minCount = Math.min(minCount, countMatrix[i][j]);
+			}
+			//
+			if (minCount >= 1) {
+				String string = String.valueOf((char) ('a' + j));
+				for (int i = 0; i < minCount; i++) {
+					list.add(string);
+				}
+			}
+		}
+		//
+		return list;
+	}
 
 }
