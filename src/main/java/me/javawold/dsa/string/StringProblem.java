@@ -104,4 +104,57 @@ public class StringProblem {
 		return list;
 	}
 
+	/**
+	 * 387. 字符串中的第一个唯一字符
+给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。
+
+ 
+
+示例：
+
+s = "leetcode"
+返回 0
+
+s = "loveleetcode"
+返回 2
+ 
+
+提示：你可以假定该字符串只包含小写字母。
+	 *
+	 * @param s
+	 * @return
+	 * @author suqianwen 2020年10月15日
+	 */
+	public int firstUniqChar(String s) {
+		if (s == null || s.length() == 0) {
+			return -1;
+		}
+
+		// 字符在字符串中的出现次数
+		int[] countArr = new int[26];
+		// 字符在字符串中第一次出现的下标。
+		int[] firstIndexArr = new int[26];
+		for (int i = 0; i < firstIndexArr.length; i++) {
+			firstIndexArr[i] = -1;
+		}
+		/**/
+		char[] chars = s.toCharArray();
+		for (int i = 0; i < chars.length; i++) {
+			int index = chars[i] - 'a';
+
+			countArr[index]++;
+
+			if (firstIndexArr[index] != -1) {
+				firstIndexArr[index] = i;
+			}
+		}
+		//
+		for (int i = 0; i < countArr.length; i++) {
+			if (countArr[i] == 1) {
+				return firstIndexArr[i];
+			}
+		}
+		return -1;
+	}
+
 }
