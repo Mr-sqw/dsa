@@ -1,4 +1,4 @@
-package me.javawold.dsa;
+package me.javawold.dsa.math;
 
 import java.util.Arrays;
 import java.util.HashMap;

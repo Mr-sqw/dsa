@@ -144,17 +144,25 @@ s = "loveleetcode"
 
 			countArr[index]++;
 
-			if (firstIndexArr[index] != -1) {
+			if (firstIndexArr[index] == -1) {
 				firstIndexArr[index] = i;
 			}
 		}
 		//
+		long minFirstIndex = Long.MAX_VALUE;
 		for (int i = 0; i < countArr.length; i++) {
-			if (countArr[i] == 1) {
-				return firstIndexArr[i];
+			if (countArr[i] == 1) {// 不重复
+				if (firstIndexArr[i] == 0) {
+					return 0;
+				}
+				minFirstIndex = Math.min(minFirstIndex, firstIndexArr[i]);
 			}
 		}
-		return -1;
+		return minFirstIndex == Long.MAX_VALUE ? -1 : (int) minFirstIndex;
+	}
+
+	public static void main(String[] args) {
+		new StringProblem().firstUniqChar("leetcode");
 	}
 
 }
