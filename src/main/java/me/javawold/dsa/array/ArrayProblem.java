@@ -214,4 +214,65 @@ public class ArrayProblem {
 		return 0;
 	}
 
+	/**
+	 * 977. 有序数组的平方
+	 * 给定一个按非递减顺序排序的整数数组 A，返回每个数字的平方组成的新数组，要求也按非递减顺序排序。
+	 *
+	 *
+	 *
+	 * 示例 1：
+	 *
+	 * 输入：[-4,-1,0,3,10]
+	 * 输出：[0,1,9,16,100]
+	 * 示例 2：
+	 *
+	 * 输入：[-7,-3,2,3,11]
+	 * 输出：[4,9,9,49,121]
+	 *
+	 *
+	 * 提示：
+	 *
+	 * 1 <= A.length <= 10000
+	 * -10000 <= A[i] <= 10000
+	 * A 已按非递减顺序排序。
+	 *
+	 * @param A
+	 * @return
+	 */
+	public int[] sortedSquares(int[] A) {
+		if (A == null || A.length == 0)
+			return null;
+
+
+		int i = 0;//大于等于0的元素的下标
+		for (; i < A.length; i++) {
+			if (A[i] >= 0) {
+				break;
+			}
+		}
+		int j = i - 1;//小于0的元素的下标
+		int k = 0;
+		int[] result = new int[A.length];
+		while (i < A.length && j >= 0) {
+			if (A[i] > -A[j]) {
+				result[k++] = A[j] * A[j];
+				j--;
+			} else {
+				result[k++] = A[i] * A[i];
+				i++;
+			}
+		}
+		//
+		while (i < A.length) {
+			result[k++] = A[i] * A[i];
+			i++;
+		}
+		//
+		while (j >= 0) {
+			result[k++] = A[j] * A[j];
+			j--;
+		}
+		return result;
+	}
+
 }
