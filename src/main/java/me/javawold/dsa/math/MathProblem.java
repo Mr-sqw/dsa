@@ -1,4 +1,4 @@
-package me.javawold.dsa;
+package me.javawold.dsa.math;
 
 import java.util.ArrayList;
 import java.util.Collections;
