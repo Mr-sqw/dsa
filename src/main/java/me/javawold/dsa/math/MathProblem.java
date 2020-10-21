@@ -300,36 +300,39 @@ public class MathProblem {
 			return 0;
 		}
 
-		//左半部分 中间无序部分 右半部分
-		//初始化
-		int len = nums.length;
-		int min = nums[len - 1];
-		int max = nums[0];//中间无序部分
-		int begin = 0;
-		int end = -1;
-		//遍历
-		for (int i = 0; i < len; i++) {
-			if (nums[i] < max) {      //从左到右维持最大值，寻找右边界end
-				end = i;
+		// 左半部分 中间无序部分 右半部分
+		/**/
+		int min = nums[nums.length - 1]; // 从右到左i位置以后的最小值。
+		int begin = 0;// 该位置一定与后面某些元素逆序，并且再往前，不会再有元素与后面元素逆序了。即该位置是 中间无序部分的最左下标。
+		for (int i = nums.length - 2; i >= 0; i--) {
+			if (nums[i] <= min) {
+				min = nums[i];// 从右到左，如果我是当前子数组的最小值，则我一定不会与后面的元素逆序。如果从某一位置开始，我[一直]是当前子数组的最小值；则从当前位置到后面部分一直是升序排序的(即为“右半部分”)。
 			} else {
-				max = nums[i];
-			}
-
-			if (nums[len - 1 - i] > min) {    //从右到左维持最小值，寻找左边界begin
-				begin = len - i - 1;
-			} else {
-				min = nums[len - i - 1];
+				begin = i;// 从右到左，如果我不是当前子数组的最小值，则当前位置一定与后面某些元素逆序。
 			}
 		}
+		/**/
+		int max = nums[0];// 从左到右i位置以前的最大值。
+		int end = -1;// 该位置一定与前面某些元素逆序，并且再往后，不会再有元素与前面元素逆序了。即该位置是 中间无序部分的最右下标。
+		for (int i = 1; i < nums.length; i++) {
+			if (nums[i] >= max) {
+				max = nums[i];// 从左到右，如果我是当前子数组的最大值，则我一定不会与前面的元素逆序。如果从某一位置开始，我[一直]是当前子数组的最大值；则从当前位置到后面部分一直是升序排序的(即为“右半部分”)。
+			} else {
+				end = i;// 从左到右，如果我不是当前子数组的最大值，则当前位置一定与前面某些元素逆序。
+			}
+		}
+		/**/
 		return end - begin + 1;
 	}
 
 	public static void main(String[] args) {
 		int[] nums = // {4,3,2,7,8,2,3,1};
 				//{ 3, 1, 3, 4, 2 };
-				{2,2,2,2,2};
+				//{2,2,2,2,2};
+				{2, 6, 4, 8, 10, 9, 15};
 		new MathProblem().// findDisappearedNumbers(nums);
-				findDuplicate(nums);
+				//findDuplicate(nums);
+				findUnsortedSubarray(nums);
 	}
 
 }

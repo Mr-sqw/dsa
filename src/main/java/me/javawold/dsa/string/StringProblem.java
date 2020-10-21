@@ -2,6 +2,9 @@ package me.javawold.dsa.string;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -161,8 +164,276 @@ s = "loveleetcode"
 		return minFirstIndex == Long.MAX_VALUE ? -1 : (int) minFirstIndex;
 	}
 
+	/**
+	 * 844. 比较含退格的字符串
+给定 S 和 T 两个字符串，当它们分别被输入到空白的文本编辑器后，判断二者是否相等，并返回结果。 # 代表退格字符。
+
+注意：如果对空文本输入退格字符，文本继续为空。
+
+ 
+
+示例 1：
+
+输入：S = "ab#c", T = "ad#c"
+输出：true
+解释：S 和 T 都会变成 “ac”。
+示例 2：
+
+输入：S = "ab##", T = "c#d#"
+输出：true
+解释：S 和 T 都会变成 “”。
+示例 3：
+
+输入：S = "a##c", T = "#a#c"
+输出：true
+解释：S 和 T 都会变成 “c”。
+示例 4：
+
+输入：S = "a#c", T = "b"
+输出：false
+解释：S 会变成 “c”，但 T 仍然是 “b”。
+ 
+
+提示：
+
+1 <= S.length <= 200
+1 <= T.length <= 200
+S 和 T 只含有小写字母以及字符 '#'。
+ 
+
+进阶：
+
+你可以用 O(N) 的时间复杂度和 O(1) 的空间复杂度解决该问题吗？
+ 
+	 *
+	 * @param S
+	 * @param T
+	 * @return
+	 * @author suqianwen 2020年10月19日
+	 */
+	public boolean backspaceCompare(String S, String T) {
+		if (S == null) {
+			return T == null;
+		} else { // S != null
+			if (T == null) {
+				return false;
+			}
+
+			if (T.equals(S)) {
+				return true;
+			}
+
+			char[] arr1 = S.toCharArray();
+			char[] arr2 = T.toCharArray();
+			int i = arr1.length - 1;
+			int j = arr2.length - 1;
+			int goBackStep1 = 0;
+			int goBackStep2 = 0;
+			while (i >= 0 && j >= 0) {
+				/**/
+				for (; i >= 0; i--) {
+					if (arr1[i] == '#') {
+						goBackStep1++;
+					} else if (goBackStep1 > 0) {
+						goBackStep1--;
+					} else {
+						break;
+					}
+				}
+				/**/
+				for (; j >= 0; j--) {
+					if (arr2[j] == '#') {
+						goBackStep2++;
+					} else if (goBackStep2 > 0) {
+						goBackStep2--;
+					} else {
+						break;
+					}
+				}
+				/* arr1[i] != '#' && goBackStep1 == 0 && arr2[j] != '#' && goBackStep2 == 0 */
+				if (i >= 0) {
+					if (j < 0 || arr1[i] != arr2[j]) {
+						return false;
+					}
+				} else if (j >= 0) {
+					return false;
+				}
+
+				i--;
+				j--;
+			}
+			/**/
+			for (; i >= 0; i--) {
+				if (arr1[i] == '#') {
+					goBackStep1++;
+				} else if (goBackStep1 > 0) {
+					goBackStep1--;
+				} else {
+					break;
+				}
+			}
+			/**/
+			for (; j >= 0; j--) {
+				if (arr2[j] == '#') {
+					goBackStep2++;
+				} else if (goBackStep2 > 0) {
+					goBackStep2--;
+				} else {
+					break;
+				}
+			}
+
+			return i < 0 && j < 0;
+		}
+	}
+
+	public boolean backspaceCompareV2(String S, String T) {
+		if (S == null) {
+			return T == null;
+		} else { // S != null
+			if (T == null) {
+				return false;
+			}
+
+			if (T.equals(S)) {
+				return true;
+			}
+
+			//
+			Deque<Character> stack1 = new LinkedList<>();
+			pushValidCharToStack(S.toCharArray(), stack1);
+			//
+			Deque<Character> stack2 = new LinkedList<>();
+			pushValidCharToStack(T.toCharArray(), stack2);
+
+			/**/
+			if (stack1.size() != stack2.size()) {
+				return false;
+			}
+			//
+			Iterator<Character> iterator1 = stack1.iterator();
+			Iterator<Character> iterator2 = stack2.iterator();
+			while (iterator1.hasNext()) {
+				if (!iterator1.next().equals(iterator2.next())) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+
+	private void pushValidCharToStack(char[] arr, Deque<Character> stack) {
+		for (char c : arr) {
+			if (c == '#') {
+				if (!stack.isEmpty()) {
+					stack.pop();
+				}
+			} else {
+				stack.push(c);
+			}
+		}
+	}
+
+	/**
+	 * 925. 长按键入
+你的朋友正在使用键盘输入他的名字 name。偶尔，在键入字符 c 时，按键可能会被长按，而字符可能被输入 1 次或多次。
+
+你将会检查键盘输入的字符 typed。如果它对应的可能是你的朋友的名字（其中一些字符可能被长按），那么就返回 True。
+
+ 
+
+示例 1：
+
+输入：name = "alex", typed = "aaleex"
+输出：true
+解释：'alex' 中的 'a' 和 'e' 被长按。
+示例 2：
+
+输入：name = "saeed", typed = "ssaaedd"
+输出：false
+解释：'e' 一定需要被键入两次，但在 typed 的输出中不是这样。
+示例 3：
+
+输入：name = "leelee", typed = "lleeelee"
+输出：true
+示例 4：
+
+输入：name = "laiden", typed = "laiden"
+输出：true
+解释：长按名字中的字符并不是必要的。
+ 
+
+提示：
+
+name.length <= 1000
+typed.length <= 1000
+name 和 typed 的字符都是小写字母。
+	 *
+	 * @param name
+	 * @param typed
+	 * @return
+	 * @author suqianwen 2020年10月21日
+	 */
+	public boolean isLongPressedName(String name, String typed) {
+		if (name == null) {
+			return typed == null;
+		} else if (typed == null || name.length() > typed.length()) {
+			return false;
+		}
+
+		int i = 1;
+		char[] nameChars = name.toCharArray();
+		int j = 1;
+		char[] typedChars = typed.toCharArray();
+		for (; i < nameChars.length && j < typedChars.length; i++, j++) {
+			int nameCount = 1;// name中连续的重复的字符的个数
+			int typedCount = 1;// typed中连续的重复的字符的个数
+
+			/* 统计name中连续的重复的字符的个数 */
+			for (; i < nameChars.length; i++) {
+				if (nameChars[i] == nameChars[i - 1]) {
+					nameCount++;
+				} else {
+					break;
+				}
+			}
+			/* 统计typed中连续的重复的字符的个数 */
+			for (; j < typedChars.length; j++) {
+				if (typedChars[j] == typedChars[j - 1]) {
+					typedCount++;
+				} else {
+					break;
+				}
+			}
+
+			if (i == nameChars.length) {// name的末尾字符重复
+				return j == typedChars.length && nameChars[i - 1] == typedChars[j - 1] && nameCount <= typedCount;
+			} else if (j == typedChars.length || nameChars[i - 1] != typedChars[j - 1] || nameCount > typedCount) {
+				return false;
+			}
+		}
+		/**/
+		if (i == nameChars.length) {// name的末尾字符不重复
+			for (; j <= typedChars.length; j++) {
+				if (typedChars[j - 1] != nameChars[i - 1]) {
+					return false;
+				}
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public static void main(String[] args) {
-		new StringProblem().firstUniqChar("leetcode");
+		new StringProblem().//firstUniqChar("leetcode");
+			//backspaceCompare("ab##", "c#d#");
+			//backspaceCompare("bxj##tw", "bxj###tw");
+			//backspaceCompareV2("ab#c", "ad#c");
+		    //isLongPressedName("alex", "aaleex");
+		    //isLongPressedName("leelee",	"lleeelee");
+			//isLongPressedName("vtkgn", "vttkgnn");
+			isLongPressedName("alex", "aaleelx");
 	}
 
 }
