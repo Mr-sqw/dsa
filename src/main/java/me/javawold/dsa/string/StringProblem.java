@@ -334,11 +334,106 @@ S 和 T 只含有小写字母以及字符 '#'。
 		}
 	}
 
+	/**
+	 * 925. 长按键入
+你的朋友正在使用键盘输入他的名字 name。偶尔，在键入字符 c 时，按键可能会被长按，而字符可能被输入 1 次或多次。
+
+你将会检查键盘输入的字符 typed。如果它对应的可能是你的朋友的名字（其中一些字符可能被长按），那么就返回 True。
+
+ 
+
+示例 1：
+
+输入：name = "alex", typed = "aaleex"
+输出：true
+解释：'alex' 中的 'a' 和 'e' 被长按。
+示例 2：
+
+输入：name = "saeed", typed = "ssaaedd"
+输出：false
+解释：'e' 一定需要被键入两次，但在 typed 的输出中不是这样。
+示例 3：
+
+输入：name = "leelee", typed = "lleeelee"
+输出：true
+示例 4：
+
+输入：name = "laiden", typed = "laiden"
+输出：true
+解释：长按名字中的字符并不是必要的。
+ 
+
+提示：
+
+name.length <= 1000
+typed.length <= 1000
+name 和 typed 的字符都是小写字母。
+	 *
+	 * @param name
+	 * @param typed
+	 * @return
+	 * @author suqianwen 2020年10月21日
+	 */
+	public boolean isLongPressedName(String name, String typed) {
+		if (name == null) {
+			return typed == null;
+		} else if (typed == null || name.length() > typed.length()) {
+			return false;
+		}
+
+		int i = 1;
+		char[] nameChars = name.toCharArray();
+		int j = 1;
+		char[] typedChars = typed.toCharArray();
+		for (; i < nameChars.length && j < typedChars.length; i++, j++) {
+			int nameCount = 1;// name中连续的重复的字符的个数
+			int typedCount = 1;// typed中连续的重复的字符的个数
+
+			/* 统计name中连续的重复的字符的个数 */
+			for (; i < nameChars.length; i++) {
+				if (nameChars[i] == nameChars[i - 1]) {
+					nameCount++;
+				} else {
+					break;
+				}
+			}
+			/* 统计typed中连续的重复的字符的个数 */
+			for (; j < typedChars.length; j++) {
+				if (typedChars[j] == typedChars[j - 1]) {
+					typedCount++;
+				} else {
+					break;
+				}
+			}
+
+			if (i == nameChars.length) {// name的末尾字符重复
+				return j == typedChars.length && nameChars[i - 1] == typedChars[j - 1] && nameCount <= typedCount;
+			} else if (j == typedChars.length || nameChars[i - 1] != typedChars[j - 1] || nameCount > typedCount) {
+				return false;
+			}
+		}
+		/**/
+		if (i == nameChars.length) {// name的末尾字符不重复
+			for (; j <= typedChars.length; j++) {
+				if (typedChars[j - 1] != nameChars[i - 1]) {
+					return false;
+				}
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public static void main(String[] args) {
 		new StringProblem().//firstUniqChar("leetcode");
 			//backspaceCompare("ab##", "c#d#");
-			backspaceCompare("bxj##tw", "bxj###tw");
+			//backspaceCompare("bxj##tw", "bxj###tw");
 			//backspaceCompareV2("ab#c", "ad#c");
+		    //isLongPressedName("alex", "aaleex");
+		    //isLongPressedName("leelee",	"lleeelee");
+			//isLongPressedName("vtkgn", "vttkgnn");
+			isLongPressedName("alex", "aaleelx");
 	}
 
 }
