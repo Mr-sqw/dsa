@@ -2,7 +2,11 @@ package me.javawold.dsa.greedy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 区间问题
@@ -98,6 +102,18 @@ public class Interval {
      * @return
      */
     public int[][] merge(int[][] intervals) {
+        return merge(intervals, true);
+    }
+
+	/**
+	 * 
+	 *
+	 * @param intervals
+	 * @param borderEqualMerge 值为true：[1,4],[4,5]合并为[1,5]；否则不合并
+	 * @return
+	 * @author suqianwen 2020年10月22日
+	 */
+    public int[][] merge(int[][] intervals, boolean borderEqualMerge) {
         if (intervals == null || intervals.length == 0)
             return new int[0][];
 
@@ -115,24 +131,24 @@ public class Interval {
         List<int[]> list = new ArrayList<>();
         int start = intervals[0][0];
         int end = intervals[0][1];
-        for (int[] interval : intervals) {
-            if (start <= interval[0] && interval[0] <= end) {//interval区间与合并区间[start,end]相交，更新end，合并区间向右扩充。
-                if (interval[1] > end){//合并区间向右扩充。
-                    end = interval[1];
-                }
-            } else {//interval区间与合并区间[start,end]不相交，旧的合并区间扩充结束；更新start、end，建立新的合并区间。
-                list.add(new int[]{start, end});
+		for (int i = 1; i < intervals.length; i++) {
+			int[] interval = intervals[i];
+			if (start <= interval[0] && (interval[0] < end || (borderEqualMerge && interval[0] == end))) {// interval区间与合并区间[start,end]相交，更新end，合并区间向右扩充。
+				if (interval[1] > end) {// 合并区间向右扩充。
+					end = interval[1];
+				}
+			} else {// interval区间与合并区间[start,end]不相交，旧的合并区间扩充结束；更新start、end，建立新的合并区间。
+				list.add(new int[] { start, end });
 
-                start = interval[0];
-                end = interval[1];
-            }
-        }
+				start = interval[0];
+				end = interval[1];
+			}
+		}
         //
         list.add(new int[]{start, end});
 
         return list.toArray(new int[list.size()][]);
     }
-
 
     public int[][] mergeV2(int[][] intervals) {
         if (intervals == null || intervals.length == 0)
@@ -164,5 +180,70 @@ public class Interval {
 
         return list.toArray(new int[list.size()][]);
     }
+
+    /**
+     * 763. 划分字母区间
+字符串 S 由小写字母组成。我们要把这个字符串划分为尽可能多的片段，同一个字母只会出现在其中的一个片段。返回一个表示每个字符串片段的长度的列表。
+
+ 
+
+示例 1：
+
+输入：S = "ababcbacadefegdehijhklij"
+输出：[9,7,8]
+解释：
+划分结果为 "ababcbaca", "defegde", "hijhklij"。
+每个字母最多出现在一个片段中。
+像 "ababcbacadefegde", "hijhklij" 的划分是错误的，因为划分的片段数较少。
+ 
+
+提示：
+
+S的长度在[1, 500]之间。
+S只包含小写字母 'a' 到 'z' 。
+     *
+     * @param S
+     * @return
+     * @author suqianwen 2020年10月22日
+     */
+	public List<Integer> partitionLabels(String S) {
+		if (S == null || S.length() == 0) {
+			return Collections.emptyList();
+		}
+
+		/* 字符串中各个字符的出现区间[start, end] */
+		Map<Character, int[]> intervalMap = new HashMap<>();
+		char[] chars = S.toCharArray();
+		for (int i = 0; i < chars.length; i++) {
+			Character c = chars[i];
+			int[] interval = intervalMap.get(c);
+			if (interval == null) {
+				interval = new int[] { i, i };
+				intervalMap.put(c, interval);
+			} else {
+				interval[1] = i;
+			}
+		}
+
+		/**/
+		int[][] intervals = new int[intervalMap.size()][];
+		Iterator<int[]> iterator = intervalMap.values().iterator();
+		int i = 0;
+		while (iterator.hasNext()) {
+			intervals[i++] = iterator.next();
+		}
+		// 合并区间
+		int[][] mergedIntervals = merge(intervals, false);
+		//
+		List<Integer> result = new ArrayList<>(mergedIntervals.length);
+		for (int j = 0; j < mergedIntervals.length; j++) {
+			result.add(mergedIntervals[j][1] - mergedIntervals[j][0] + 1);
+		}
+		return result;
+	}
+
+	public static void main(String[] args) {
+		new Interval().partitionLabels("caedbdedda");
+	}
 
 }
