@@ -1,4 +1,4 @@
-package me.javawold.dsa;
+package me.javawold.dsa.hash;
 
 import java.util.HashMap;
 import java.util.Map;

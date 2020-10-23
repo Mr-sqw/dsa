@@ -57,4 +57,8 @@ public class SubsetProblem {
         }
     }
 
+	public static void main(String[] args) {
+		new SubsetProblem().subsets(new int[] { 1, 2, 3 });
+	}
+
 }
