@@ -325,6 +325,61 @@ public class MathProblem {
 		return end - begin + 1;
 	}
 
+	/**
+	 * 118. 杨辉三角
+给定一个非负整数 numRows，生成杨辉三角的前 numRows 行。
+
+
+
+在杨辉三角中，每个数是它左上方和右上方的数的和。
+
+示例:
+
+输入: 5
+输出:
+[
+     [1],
+    [1,1],
+   [1,2,1],
+  [1,3,3,1],
+ [1,4,6,4,1]
+]
+	 *
+	 * @param numRows
+	 * @return
+	 * @author suqianwen 2020年10月23日
+	 */
+	public List<List<Integer>> generate(int numRows) {
+		if (numRows == 0) {
+			return Collections.emptyList();
+		}
+
+		List<List<Integer>> result = new ArrayList<>(numRows);
+		for (int i = 1; i <= numRows; i++) {
+			List<Integer> currRows = new ArrayList<>(i);
+			result.add(currRows);
+
+			int j = 1;
+			if (j++ <= i) {
+				currRows.add(1);
+			}
+			//
+			int num = i - 2;
+			if (num >= 1) {// 从第三行起进行累加
+				List<Integer> lastRows = result.get(num);
+				for (int k = 0; k < num; k++) {
+					currRows.add(lastRows.get(k) + lastRows.get(k + 1));
+				}
+				j += num;
+			}
+			//
+			if (j <= i) {
+				currRows.add(1);
+			}
+		}
+		return result;
+	}
+
 	public static void main(String[] args) {
 		int[] nums = // {4,3,2,7,8,2,3,1};
 				//{ 3, 1, 3, 4, 2 };
@@ -332,7 +387,8 @@ public class MathProblem {
 				{2, 6, 4, 8, 10, 9, 15};
 		new MathProblem().// findDisappearedNumbers(nums);
 				//findDuplicate(nums);
-				findUnsortedSubarray(nums);
+				//findUnsortedSubarray(nums);
+		        generate(5);
 	}
 
 }
