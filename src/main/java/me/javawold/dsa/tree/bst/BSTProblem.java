@@ -119,6 +119,67 @@ public class BSTProblem {
     }
 
     /**
+     * 230. 二叉搜索树中第K小的元素
+给定一个二叉搜索树，编写一个函数 kthSmallest 来查找其中第 k 个最小的元素。
+
+说明：
+你可以假设 k 总是有效的，1 ≤ k ≤ 二叉搜索树元素个数。
+
+示例 1:
+
+输入: root = [3,1,4,null,2], k = 1
+   3
+  / \
+ 1   4
+  \
+   2
+输出: 1
+示例 2:
+
+输入: root = [5,3,6,2,4,null,null,1], k = 3
+       5
+      / \
+     3   6
+    / \
+   2   4
+  /
+ 1
+输出: 3
+进阶：
+如果二叉搜索树经常被修改（插入/删除操作）并且你需要频繁地查找第 k 小的值，你将如何优化 kthSmallest 函数？
+     *
+     * @param root
+     * @param k
+     * @return
+     * @author suqianwen 2020年10月23日
+     */
+	public int kthSmallest(TreeNode root, int k) {
+		AtomicInteger kAtomicInteger = new AtomicInteger(k);
+		AtomicInteger result = new AtomicInteger();
+		doGetKthSmallest(root, kAtomicInteger, result);
+
+		return result.get();
+	}
+
+	private void doGetKthSmallest(TreeNode root, AtomicInteger k, AtomicInteger result) {
+		if (root == null) {
+			return;
+		}
+
+		// 左子树
+		doGetKthSmallest(root.left, k, result);
+
+		// 根节点
+		if (k.decrementAndGet() == 0) {
+			result.set(root.val);
+			return;
+		}
+
+		// 右子树
+		doGetKthSmallest(root.right, k, result);
+	}
+
+    /**
      * 给定二叉搜索树（BST）的根节点和要插入树中的值，将值插入二叉搜索树。 返回插入后二叉搜索树的根节点。 输入数据保证，新值和原始二叉搜索树中的任意节点值都不同。
      *
      * 注意，可能存在多种有效的插入方式，只要树在插入后仍保持为二叉搜索树即可。 你可以返回任意有效的结果。
